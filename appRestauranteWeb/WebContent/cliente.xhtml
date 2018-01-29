@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Clientes</title>
+</h:head>
+<body>
+	<p:messages autoUpdate="true"></p:messages>
+	<h:panelGrid columns="2">
+		<h:form id="form1">
+			<p:panel header="Nuevo Cliente">
+				<p:panelGrid columns="2">
+					<h:outputText value="Cédula:" />
+					<p:inputText value="#{controllerCliente.idcliente}" required="true"
+						requiredMessage="Especifique la cédula" />
+					<h:outputText value="Nombre: " />
+					<p:inputText value="#{controllerCliente.nombrecliente}"
+						required="true" requiredMessage="Especifique el nombre" />
+					<h:outputText value="Apellido: " />
+					<p:inputText value="#{controllerCliente.apellidocliente}"
+						required="true" requiredMessage="Especifique el apellido" />
+					<h:outputText value="Dirección: " />
+					<p:inputText value="#{controllerCliente.direccioncliente}"
+						required="true" requiredMessage="Especifique el nombre" />
+					<h:outputText value="Teléfono: " />
+					<p:inputText value="#{controllerCliente.telefonocliente}"
+						required="true" requiredMessage="Especifique el nombre" />
+					<h:outputText value="Correo Electrónico: " />
+					<p:inputText value="#{controllerCliente.correocliente}"
+						required="true" requiredMessage="Especifique el nombre" />
+				</p:panelGrid>
+				<p:commandButton value="Agregar" icon="ui-icon-disk"
+					update="@form,:form2:tabla1"
+					actionListener="#{controllerCliente.AgregarCliente()}">
+				</p:commandButton>
+
+			</p:panel>
+		</h:form>
+
+		<h:form id="form2">
+			<p:panel header="LISTA DE REGISTROS">
+				<p:dataTable value="#{controllerCliente.lista}" var="c" id="tabla1">
+					<p:column headerText="Cédula">
+						<h:outputText value="#{c.idcliente}" />
+					</p:column>
+					<p:column headerText="Apellido">
+						<h:outputText value="#{c.apellidocliente}" />
+					</p:column>
+					<p:column headerText="Nombre">
+						<h:outputText value="#{c.nombrecliente}" />
+					</p:column>
+					<p:column headerText="Dirección">
+						<h:outputText value="#{c.direccioncliente}" />
+					</p:column>
+					<p:column headerText="Teléfono" style="text-align:right">
+						<h:outputText value="#{c.telefonocliente}" />
+					</p:column>
+					<p:column headerText="e-mail">
+						<h:outputText value="#{c.correocliente}" />
+					</p:column>
+					<p:column headerText="EDITAR">
+						<p:commandButton icon="ui-icon-pencil" update="form4"
+							onclick="PF('dialogo1').show();"
+							actionListener="#{controllerCliente.CargarCliente(c)}"></p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</h:panelGrid>
+
+	<p:dialog header="Edición de Cliente" widgetVar="dialogo1"
+		id="dialogo1" modal="true" height="275" hideEffect="fade">
+		<h:form id="form4">
+
+			<p:panelGrid columns="2">
+				<h:outputText value="Cédula:" />
+				<h:outputText value="#{controllerCliente.idcliente}" />
+				<h:outputText value="Nombre:" />
+				<p:inputText value="#{controllerCliente.nombrecliente}"
+					required="true" />
+				<h:outputText value="Apellido:" />
+				<p:inputText value="#{controllerCliente.apellidocliente}"
+					required="true" />
+				<h:outputText value="Dirección: " />
+				<p:inputText value="#{controllerCliente.direccioncliente}"
+					required="true" requiredMessage="Especifique el nombre" />
+				<h:outputText value="Teléfono: " />
+				<p:inputText value="#{controllerCliente.telefonocliente}"
+					required="true" requiredMessage="Especifique el nombre" />
+				<h:outputText value="Correo Electrónico: " />
+				<p:inputText value="#{controllerCliente.correocliente}"
+					required="true" requiredMessage="Especifique el nombre" />
+			</p:panelGrid>
+			<p:commandButton value="Actualizar" update="@form,:form2:tabla1"
+				actionListener="#{controllerCliente.EditarCliente()}"
+				onclick="PF('modal').hide();$('#form4').trigger('reset');"></p:commandButton>
+		</h:form>
+	</p:dialog>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="restauranteDS" transaction-type="JTA">
+		<jta-data-source>java:/restauranteDS</jta-data-source>
+		<class>restaurante.model.entities.TabCajCajero</class>
+		<class>restaurante.model.entities.TabCajTipoTransaccion</class>
+		<class>restaurante.model.entities.TabCajTransaccion</class>
+		<class>restaurante.model.entities.TabInvBodega</class>
+		<class>restaurante.model.entities.TabInvCategoriaProducto</class>
+		<class>restaurante.model.entities.TabInvDetalleCompra</class>
+		<class>restaurante.model.entities.TabInvFacturaCompra</class>
+		<class>restaurante.model.entities.TabInvProducto</class>
+		<class>restaurante.model.entities.TabInvProveedor</class>
+		<class>restaurante.model.entities.TabLogTipoUsuario</class>
+		<class>restaurante.model.entities.TabLogUsuario</class>
+		<class>restaurante.model.entities.TabVtsCliente</class>
+		<class>restaurante.model.entities.TabVtsDetallePedido</class>
+		<class>restaurante.model.entities.TabVtsDetalleVenta</class>
+		<class>restaurante.model.entities.TabVtsFacturaVenta</class>
+		<class>restaurante.model.entities.TabVtsPedido</class>
+		<class>restaurante.model.entities.TabVtsPlato</class>
+	</persistence-unit>
+</persistence>
