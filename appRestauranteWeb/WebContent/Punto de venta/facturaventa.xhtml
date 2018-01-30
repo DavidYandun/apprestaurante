@@ -11,18 +11,21 @@
 </h:head>
 <body>
 	<h2>Facturacion</h2>
-	
+
 	<p:panel id="panel1">
 		<h:form id="form2">
 			<p:panel header="Datos de la factura">
-				<p:commandButton action="#{controllerFacturaVenta.crearNuevaFactura()}"
+				<p:commandButton
+					action="#{controllerFacturaVenta.crearNuevaFactura()}"
 					value="Crear nueva factura" update="form2 :form3" />
 				<p:panelGrid columns="2">
 					<h:outputText value="Nro. de factura:" style="font-weight: bold" />
-					<h:outputText value="#{controllerFacturaVenta.facturaCabTmp.idfacturaventa}" />
+					<h:outputText
+						value="#{controllerFacturaVenta.facturaCabTmp.idfacturaventa}" />
 					<h:outputText value="Fecha de la factura:"
 						style="font-weight: bold" />
-					<h:outputText value="#{controllerFacturaVenta.facturaCabTmp.fechafacturaventa}">
+					<h:outputText
+						value="#{controllerFacturaVenta.facturaCabTmp.fechafacturaventa}">
 						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
 					</h:outputText>
 					<h:outputText value="Seleccione el cliente:"
@@ -39,12 +42,11 @@
 					<h:outputText value="Codigo del cliente:" style="font-weight: bold" />
 					<h:outputText id="idcliente"
 						value="#{controllerFacturaVenta.idcliente}" />
-					<h:commandButton value="Guardar factura"
-						action="#" />
+					<h:commandButton value="Guardar factura" action="#" />
 					<p:messages id="mensajes" />
 					<h:commandButton value="Imprimir"
-						rendered="#{controllerFacturaVenta.facturaCabTmpGuardada}" type="button"
-						icon="ui-icon-print">
+						rendered="#{controllerFacturaVenta.facturaCabTmpGuardada}"
+						type="button" icon="ui-icon-print">
 						<p:printer target=":panel1" />
 					</h:commandButton>
 				</p:panelGrid>
@@ -57,17 +59,17 @@
 					<h:selectOneMenu value="#{controllerFacturaVenta.idplato}">
 						<f:selectItem itemLabel="Seleccione un plato..." itemValue="-1" />
 						<f:selectItems value="#{controllerFacturaVenta.listaPlatoSI}" />
-						<p:ajax update="mensajes2"
-							></p:ajax>
+						<p:ajax update="mensajes2"></p:ajax>
 					</h:selectOneMenu>
 					<h:outputText value="Cantidad:" />
 					<h:inputText value="#{controllerFacturaVenta.cantidadplato}" />
 					<p:commandButton value="adicionar"
-						action="#{controllerFacturaVenta.insertarDetalle()}" update="form3"
-						icon="ui-icon-plusthick" />
+						action="#{controllerFacturaVenta.insertarDetalle()}"
+						update="form3" icon="ui-icon-plusthick" />
 				</p:panelGrid>
 				<p:messages id="mensajes2"></p:messages>
-				<p:dataTable value="#{controllerFacturaVenta.facturaCabTmp.tabVtsDetalleVentas}"
+				<p:dataTable
+					value="#{controllerFacturaVenta.facturaCabTmp.tabVtsDetalleVentas}"
 					var="d" id="tablaFacturaDets">
 					<f:facet name="header">
 						<h:outputText value="Detalle de platos:" />
@@ -106,7 +108,8 @@
 						<f:facet name="header">
 					SUBTOTAL
 				</f:facet>
-						<h:outputText value="#{d.cantidaddetalleventa * d.valorunitarioventa}"
+						<h:outputText
+							value="#{d.cantidaddetalleventa * d.valorunitarioventa}"
 							style="text-align:right" />
 						<f:facet name="footer">
 							<h:panelGrid columns="2"

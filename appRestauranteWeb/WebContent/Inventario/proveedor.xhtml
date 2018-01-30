@@ -1,9 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
 	<title>Proveedores</title>
@@ -15,8 +15,8 @@
 			<p:panel header="Nuevo Proveedor">
 				<p:panelGrid columns="2">
 					<h:outputText value="Nombre:" />
-					<p:inputText value="#{controllerProveedor.nombreproveedor}" required="true"
-						requiredMessage="Especifique el nombre" />
+					<p:inputText value="#{controllerProveedor.nombreproveedor}"
+						required="true" requiredMessage="Especifique el nombre" />
 					<h:outputText value="Dirección: " />
 					<p:inputText value="#{controllerProveedor.direccionproveedor}"
 						required="true" requiredMessage="Especifique la dirección" />
@@ -26,7 +26,7 @@
 					<h:outputText value="e-mail: " />
 					<p:inputText value="#{controllerProveedor.correoproveedor}"
 						required="true" requiredMessage="Especifique el correo" />
-					<h:outputText value="Correo Electrónico: " />					
+					<h:outputText value="Correo Electrónico: " />
 				</p:panelGrid>
 				<p:commandButton value="Agregar" icon="ui-icon-disk"
 					update="@form,:form2:tabla1"
@@ -38,7 +38,8 @@
 
 		<h:form id="form2">
 			<p:panel header="LISTA DE REGISTROS">
-				<p:dataTable value="#{controllerProveedor.lista}" var="p" id="tabla1">				
+				<p:dataTable value="#{controllerProveedor.lista}" var="p"
+					id="tabla1">
 					<p:column headerText="Nombre">
 						<h:outputText value="#{p.nombreproveedor}" />
 					</p:column>
@@ -65,10 +66,10 @@
 		id="dialogo1" modal="true" height="275" hideEffect="fade">
 		<h:form id="form4">
 
-			<p:panelGrid columns="2">				
+			<p:panelGrid columns="2">
 				<h:outputText value="Nombre:" />
 				<p:inputText value="#{controllerProveedor.nombreproveedor}"
-					required="true" />				
+					required="true" />
 				<h:outputText value="Dirección: " />
 				<p:inputText value="#{controllerProveedor.direccionproveedor}"
 					required="true" requiredMessage="Especifique el nombre" />
@@ -86,4 +87,3 @@
 	</p:dialog>
 </body>
 </html>
-      
