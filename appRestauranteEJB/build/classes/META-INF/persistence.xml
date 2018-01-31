@@ -19,5 +19,6 @@
 		<class>restaurante.model.entities.TabVtsFacturaVenta</class>
 		<class>restaurante.model.entities.TabVtsPedido</class>
 		<class>restaurante.model.entities.TabVtsPlato</class>
+		<class>restaurante.model.entities.TabParametro</class>
 	</persistence-unit>
 </persistence>

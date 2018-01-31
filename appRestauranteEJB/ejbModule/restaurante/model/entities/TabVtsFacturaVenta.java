@@ -34,7 +34,7 @@ public class TabVtsFacturaVenta implements Serializable {
 	private BigDecimal totalfacturaventa;
 
 	//bi-directional many-to-one association to TabVtsDetalleVenta
-	@OneToMany(mappedBy="tabVtsFacturaVenta")
+	@OneToMany(mappedBy="tabVtsFacturaVenta",cascade=CascadeType.ALL)
 	private List<TabVtsDetalleVenta> tabVtsDetalleVentas;
 
 	//bi-directional many-to-one association to TabVtsCliente

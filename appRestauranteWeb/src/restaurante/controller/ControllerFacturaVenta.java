@@ -3,16 +3,18 @@ package restaurante.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import restaurante.model.entities.TabInvProducto;
 import restaurante.model.entities.TabVtsCliente;
 import restaurante.model.entities.TabVtsFacturaVenta;
 import restaurante.model.entities.TabVtsPlato;
+import restaurante.model.manager.ManagerCliente;
 import restaurante.model.manager.ManagerFactura;
+import restaurante.model.manager.ManagerPlato;
 import restaurante.view.util.JSFUtil;
 
 @ManagedBean
@@ -22,11 +24,24 @@ public class ControllerFacturaVenta {
 	private String idcliente;
 	@EJB
 	private ManagerFactura managerFactura;
+	@EJB
+	private ManagerCliente managerCliente;
+	@EJB
+	private ManagerPlato managerPlato;
 	private Integer idplato;
 	private Integer cantidadplato;
 	private TabVtsFacturaVenta facturaCabTmp;
 	private boolean facturaCabTmpGuardada;
 
+	@PostConstruct
+	public void iniciar() {
+	facturaCabTmp = managerFactura.crearFacturaVentaTmp();
+	idcliente = null;
+	idplato = 0;
+	cantidadplato = 0;
+	facturaCabTmpGuardada = false;
+	
+	}
 	public ControllerFacturaVenta() {
 
 	}
@@ -38,6 +53,8 @@ public class ControllerFacturaVenta {
 	 * 
 	 * @return outcome para la navegacion.
 	 */
+	
+	
 	public String crearNuevaFactura() {
 		facturaCabTmp = managerFactura.crearFacturaVentaTmp();
 		idcliente = null;
@@ -79,10 +96,25 @@ public class ControllerFacturaVenta {
 		try {
 			managerFactura.agregarDetalleFacturaTmp(facturaCabTmp, idplato, cantidadplato);
 			idplato = 0;
-			cantidadplato = 0;
+			cantidadplato = 1;
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
 		}
+		return "";
+	}
+
+	public String guardarFactura() {
+		if (facturaCabTmpGuardada == true) {
+			JSFUtil.crearMensajeWarning("La factura ya fue guardada.");
+			return "";
+		}
+		try {
+			managerFactura.guardarFacturaTemporal(facturaCabTmp);
+			facturaCabTmpGuardada = true;
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+		}
+
 		return "";
 	}
 
@@ -134,7 +166,7 @@ public class ControllerFacturaVenta {
 	 */
 	public List<SelectItem> getListaClientesSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
-		List<TabVtsCliente> listadoClientes = managerFactura.findAllClientes();
+		List<TabVtsCliente> listadoClientes = managerCliente.findAllClientes();
 
 		for (TabVtsCliente c : listadoClientes) {
 			SelectItem item = new SelectItem(c.getIdcliente(), c.getApellidocliente() + " " + c.getNombrecliente());
@@ -151,7 +183,7 @@ public class ControllerFacturaVenta {
 	 */
 	public List<SelectItem> getListaPlatoSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
-		List<TabVtsPlato> listadoPlatos = managerFactura.findAllPlatos();
+		List<TabVtsPlato> listadoPlatos = managerPlato.findAllPlatos();
 
 		for (TabVtsPlato p : listadoPlatos) {
 			SelectItem item = new SelectItem(p.getIdplato(), p.getNombreplato());
