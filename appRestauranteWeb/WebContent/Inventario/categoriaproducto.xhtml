@@ -10,12 +10,14 @@
 </h:head>
 <h:body>
 	<p:messages autoUpdate="true"></p:messages>
-	<h:outputText value="REY POLLO" style="padding-left: 10px; font-weight: bold; font-size: 175%" />
+	<h:outputText value="REY POLLO"
+		style="padding-left: 10px; font-weight: bold; font-size: 175%" />
 	<p:separator />
 	<div align="center">
 		<br />
 		<h:panelGrid columns="3">
 			<p:splitButton value="Inventario">
+				<p:menuitem value="Producto" url="producto.xhtml" />
 				<p:menuitem value="Bodega" url="bodega.xhtml" />
 				<p:menuitem value="Categorías de producto"
 					url="categoriaproducto.xhtml" />
