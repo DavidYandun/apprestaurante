@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+	<p:messages autoUpdate="true"></p:messages>
+	<h:outputText value="REY POLLO" style="padding-left: 10px; font-weight: bold; font-size: 175%" />
+	<p:separator />
+	<div align="center">
+		<br />
+		<h:panelGrid columns="3">
+			<p:splitButton value="Inventario">
+				<p:menuitem value="Bodega" url="../Inventario/bodega.xhtml" />
+				<p:menuitem value="Categorías de producto"
+					url="../Inventario/categoriaproducto.xhtml" />
+				<p:menuitem value="Proveedores" url="../Inventario/proveedor.xhtml" />
+			</p:splitButton>
+			<p:splitButton value="Punto de Venta">
+				<p:menuitem value="Clientes" url="../Punto de venta/cliente.xhtml" />
+				<p:menuitem value="Facturas de Venta"
+					url="../Punto de venta/facturaventa.xhtml" />
+				<p:menuitem value="Pedidos" url="../Punto de venta/pedido.xhtml" />
+				<p:menuitem value="Platos" url="../Punto de venta/plato.xhtml" />
+			</p:splitButton>
+			<p:splitButton value="Caja diaria">
+				<p:menuitem value="Tipo de Transacciones"
+					url="../Caja diaria/tipotransaccion.xhtml" />
+			</p:splitButton>
+		</h:panelGrid>
+	</div>
+	<br />
+	<br />
+	<h:form>
+		<p:panel>
+			<h:outputText value="cantidad" />
+			<p:inputText value="#{controllerPedido.cantidad}" />
+			<h:outputText value="producto" />
+			<p:inputText value="#{controllerPedido.idproducto}" />
+			<h:outputText value="plato" />
+			<p:inputText value="#{controllerPedido.idplato}" />
+			<p:commandButton value="Agregar detalle"
+				actionListener="#{controllerPedido.AgregarDetalle()}" update="@form"></p:commandButton>
+
+			<p:dataTable
+				value="#{controllerPedido.pedidoTemp.tabVtsDetallePedidos}" var="d">
+				<p:column headerText="PK detalle"></p:column>
+				<h:outputText value="#{d.iddetallepedido}" />
+				<p:column headerText="CANTIDAD"></p:column>
+				<h:outputText value="#{d.cantidaddetallepedido}" />
+				<p:column headerText="NOMBRE PRODUCTO"></p:column>
+				<h:outputText value="#{d.valorunitariodetallepedido}" />
+			</p:dataTable>
+		</p:panel>
+	</h:form>
+</body>
+</html>

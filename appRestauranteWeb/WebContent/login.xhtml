@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<!--<link rel="stylesheet" type="text/css" href="Resource/css/style.css"
+		media="screen" />-->
+</h:head>
+<body>
+	<p:messages autoUpdate="true"></p:messages>
+	<h:panelGrid columns="1" style="margin: 0 auto;">
+		<h:panelGrid style="margin: 0 auto;">
+			<p:graphicImage value="Resource/img/pollo2.png" />
+			<br />
+			<br />
+			<br />
+		</h:panelGrid>
+		<h:form id="form1">
+			<p:panel header="Login">
+				<h:outputText
+					value="Si no es  usuario del sistema, solicite su registro" />
+				<br />
+				<h:outputText value="a un administrador" />
+				<br />
+				<br />
+				<h:outputText value="Usuario o Email:" style="font-weight: bold" />
+				<br />
+				<p:inputText value="#{controllerUsuario.nombreUsuario}"
+					required="true" requiredMessage="Especifique su usuario o email"
+					style="width: 100%" />
+				<br />
+				<br />
+				<h:outputText value="Contraseña:" style="font-weight: bold" />
+				<br />
+				<p:inputText value="#{controllerUsuario.passwordUsuario}"
+					required="true" type="password"
+					requiredMessage="Especifique su contraseña" style="width: 100%" />
+				<br />
+				<div align="right">
+					<h:link value="¿Olvido su contraseña?"
+						style="color: #4253f4;
+						text-decoration: underline blue;" />
+				</div>
+				<br />
+				<br />
+				<div align="center">
+					<p:commandButton value="Ingresar" icon="ui-icon-circle-check"
+						action="#{controllerUsuario.actionLogin()}" />
+				</div>
+			</p:panel>
+		</h:form>
+	</h:panelGrid>
+</body>
+</html>
