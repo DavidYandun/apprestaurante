@@ -10,6 +10,32 @@
 </h:head>
 <h:body>
 	<p:messages autoUpdate="true"></p:messages>
+	<h:outputText value="REY POLLO" style="padding-left: 10px; font-weight: bold; font-size: 175%" />
+	<p:separator />
+	<div align="center">
+		<br />
+		<h:panelGrid columns="3">
+			<p:splitButton value="Inventario">
+				<p:menuitem value="Bodega" url="../Inventario/bodega.xhtml" />
+				<p:menuitem value="Categorías de producto"
+					url="../Inventario/categoriaproducto.xhtml" />
+				<p:menuitem value="Proveedores" url="../Inventario/proveedor.xhtml" />
+			</p:splitButton>
+			<p:splitButton value="Punto de Venta">
+				<p:menuitem value="Clientes" url="../Punto de venta/cliente.xhtml" />
+				<p:menuitem value="Facturas de Venta"
+					url="../Punto de venta/facturaventa.xhtml" />
+				<p:menuitem value="Pedidos" url="../Punto de venta/pedido.xhtml" />
+				<p:menuitem value="Platos" url="../Punto de venta/plato.xhtml" />
+			</p:splitButton>
+			<p:splitButton value="Caja diaria">
+				<p:menuitem value="Tipo de Transacciones"
+					url="tipotransaccion.xhtml" />
+			</p:splitButton>
+		</h:panelGrid>
+	</div>
+	<br />
+	<br />
 	<h:panelGrid columns="2">
 		<h:form id="form1">
 			<p:panel header="Nuevo Tipo de Transacción">
