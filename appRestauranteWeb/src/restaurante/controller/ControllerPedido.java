@@ -1,12 +1,20 @@
 package restaurante.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import restaurante.model.entities.TabCajTransaccion;
 import restaurante.model.entities.TabVtsPedido;
+import restaurante.model.entities.TabVtsPlato;
 import restaurante.model.manager.ManagerPedido;
+import restaurante.model.manager.ManagerPlato;
+import restaurante.view.util.JSFUtil;
 
 @SessionScoped
 @ManagedBean
@@ -14,35 +22,61 @@ import restaurante.model.manager.ManagerPedido;
 public class ControllerPedido {
 	@EJB
 	private ManagerPedido managerPedido;
+	@EJB
+	private ManagerPlato managerPlato;
 
-	private int idpedido;
 	private int cantidad;
-	private int idproducto;
+
 	private int idplato;
 	private int mesa;
 	private int idusuario;
-	private TabVtsPedido pedidoTemp;
+	private TabVtsPedido pedidoTmp;
 	private TabCajTransaccion transTemp;
+	private boolean transaccionTmpGuardada;
+	private boolean pedidoTmpGuardada;
 
-	public void AgregarDetalle() {
-		pedidoTemp = managerPedido.agregarDetallePedido(pedidoTemp, idproducto, idplato, cantidad);
+	@PostConstruct
+	public void iniciar() {
+		transTemp = managerPedido.crearTransaccionTmp();
+		pedidoTmp = managerPedido.crearPedidoTmp(transTemp);
+		cantidad = 1;
+		idplato = 0;
+		mesa = 0;
+		transaccionTmpGuardada = false;
+		pedidoTmpGuardada = false;
+
 	}
 
-	public void GuardarPedido() {
-		try {
-			pedidoTemp = managerPedido.guardarPedido(pedidoTemp, mesa, idpedido, idusuario);
-			System.out.println("Pedido guardado: " + pedidoTemp.getIdpedido());
-		} catch (Exception e) {
-			e.printStackTrace();
+	public String insertarDetalle() {
+		if (transaccionTmpGuardada == true && pedidoTmpGuardada == true) {
+			JSFUtil.crearMensajeWarning("La factura ya fue guardada.");
+			return "";
 		}
+		try {
+			managerPedido.agregarDetallePedidoTmp(pedidoTmp, idplato, cantidad);
+			idplato = 0;
+			cantidad = 1;
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+		}
+		return "";
 	}
 
-	public int getIdpedido() {
-		return idpedido;
-	}
+	public String guardarPedido() {
+		if (transaccionTmpGuardada == true && pedidoTmpGuardada == true) {
+			JSFUtil.crearMensajeWarning("El pedido ya fue guardada.");
+			return "";
+		}
+		try {
+			managerPedido.guardarPedidoTemporal(transTemp, pedidoTmp);
 
-	public void setIdpedido(int idpedido) {
-		this.idpedido = idpedido;
+			transaccionTmpGuardada = true;
+			pedidoTmpGuardada = true;
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+		}
+
+		return "";
 	}
 
 	public int getCantidad() {
@@ -51,14 +85,6 @@ public class ControllerPedido {
 
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
-	}
-
-	public int getIdproducto() {
-		return idproducto;
-	}
-
-	public void setIdproducto(int idproducto) {
-		this.idproducto = idproducto;
 	}
 
 	public int getIdplato() {
@@ -85,12 +111,12 @@ public class ControllerPedido {
 		this.idusuario = idusuario;
 	}
 
-	public TabVtsPedido getPedidoTemp() {
-		return pedidoTemp;
+	public TabVtsPedido getPedidoTmp() {
+		return pedidoTmp;
 	}
 
-	public void setPedidoTemp(TabVtsPedido pedidoTemp) {
-		this.pedidoTemp = pedidoTemp;
+	public void setPedidoTmp(TabVtsPedido pedidoTmp) {
+		this.pedidoTmp = pedidoTmp;
 	}
 
 	public TabCajTransaccion getTransTemp() {
@@ -99,6 +125,17 @@ public class ControllerPedido {
 
 	public void setTransTemp(TabCajTransaccion transTemp) {
 		this.transTemp = transTemp;
+	}
+
+	public List<SelectItem> getListaPlatoSI() {
+		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
+		List<TabVtsPlato> listadoPlatos = managerPlato.findAllPlatos();
+
+		for (TabVtsPlato p : listadoPlatos) {
+			SelectItem item = new SelectItem(p.getIdplato(), p.getNombreplato());
+			listadoSI.add(item);
+		}
+		return listadoSI;
 	}
 
 }

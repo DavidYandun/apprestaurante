@@ -10,10 +10,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import restaurante.model.entities.TabCajCajero;
+import restaurante.model.entities.TabCajTipoTransaccion;
 import restaurante.model.entities.TabCajTransaccion;
 import restaurante.model.entities.TabInvProducto;
 import restaurante.model.entities.TabLogUsuario;
+import restaurante.model.entities.TabParametro;
+import restaurante.model.entities.TabVtsCliente;
 import restaurante.model.entities.TabVtsDetallePedido;
+import restaurante.model.entities.TabVtsDetalleVenta;
+import restaurante.model.entities.TabVtsFacturaVenta;
 import restaurante.model.entities.TabVtsPedido;
 import restaurante.model.entities.TabVtsPlato;
 
@@ -31,61 +36,145 @@ public class ManagerPedido {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TabVtsPedido agregarDetallePedido(TabVtsPedido ped, int idproducto, int idplato, int cantidaddetallepedido) {
-		if (ped == null) {
-			ped = new TabVtsPedido();
-			ped.setTabVtsDetallePedidos(new ArrayList<TabVtsDetallePedido>());
-		}
-		// recuperar datos necesarios
-		TabInvProducto prod = em.find(TabInvProducto.class, idproducto);
-		TabVtsPlato plato = em.find(TabVtsPlato.class, idplato);
-		BigDecimal valorTotal;
-
-		// llenar datos del nuevo detalle
-		TabVtsDetallePedido det = new TabVtsDetallePedido();
-		det.setCantidaddetallepedido(cantidaddetallepedido);
-		det.setTabInvProducto(prod);
-		det.setTabVtsPlato(plato);
-		if (prod != null) {
-			valorTotal = prod.getValorventa().multiply(BigDecimal.valueOf(cantidaddetallepedido));
-			det.setValorunitariodetallepedido(prod.getValorventa());
-			det.setValorTotaldetallepedido(valorTotal);
-		} else if (plato != null) {
-			valorTotal = plato.getValorplato().multiply(BigDecimal.valueOf(cantidaddetallepedido));
-			det.setValorunitariodetallepedido(plato.getValorplato());
-			det.setValorTotaldetallepedido(valorTotal);
-		}
-		det.setTabVtsPedido(ped);
-		return ped;
+	public TabVtsPlato findPlatoById(int idplato) throws Exception {
+		TabVtsPlato p = em.find(TabVtsPlato.class, idplato);
+		return p;
 	}
 
-	public TabVtsPedido guardarPedido(TabVtsPedido ped, int mesa, int idpedido, int idusuario) throws Exception {
-		// guardar transaccion
-		TabCajCajero cajero;
-		cajero = em.find(TabCajCajero.class, new Date());
-		TabLogUsuario usuario;
-		usuario = em.find(TabLogUsuario.class, idusuario);
+	public TabCajTransaccion crearTransaccionTmp() {
+		TabLogUsuario usuario = em.find(TabLogUsuario.class, 1);
 
-		TabCajTransaccion tra = new TabCajTransaccion();
-		tra.setTabCajCajero(cajero);
-		tra.setIdtransaccion(1);
-		tra.setTabLogUsuario(usuario);
-		tra.setValortransaccion(new BigDecimal(100));
-		tra.setDescripciontransaccion("pedido");
-		////////////////////
+		TabCajTransaccion transaccionTmp = new TabCajTransaccion();
+		transaccionTmp.setTabVtsPedidos(new ArrayList<TabVtsPedido>());
+		transaccionTmp.setDescripciontransaccion("pedido");
+		transaccionTmp.setTabLogUsuario(usuario);
+		return transaccionTmp;
+	}
 
-		if (ped == null)
-			throw new Exception("Se debe almacenar al menos un plato");
-		if (mesa == 0)
-			throw new Exception("Se debe registrar la mesa");
+	public TabLogUsuario findUsuarioById(Integer idusuario) throws Exception {
+		TabLogUsuario usuario = em.find(TabLogUsuario.class, "idusuario");
+		return usuario;
+	}
 
-		ped.setFechapedido(new Date());
-		ped.setIdpedido(idpedido);
-		ped.setMesa(mesa);
-		ped.setTotal(new BigDecimal(100));
-		// falta guardar en la transacción
-		em.persist(ped);
-		return ped;
+	public void asignarUsuarioTransTmp(TabCajTransaccion transaccionTmp, Integer idusuario) throws Exception {
+
+		TabLogUsuario usuario = null;
+		if (idusuario == null )
+			throw new Exception("Error debe especificar el usuario.");
+		try {
+			usuario = findUsuarioById(idusuario);
+			if (usuario == null)
+				throw new Exception("Error al asignar usuario.");
+			transaccionTmp.setTabLogUsuario(usuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Error al asignar usuario: " + e.getMessage());
+		}
+	}
+
+	public TabVtsPedido crearPedidoTmp(TabCajTransaccion transaccionTmp) {
+		TabVtsPedido pedidoTmp = new TabVtsPedido();
+		pedidoTmp.setFechapedido(new Date());
+		pedidoTmp.setTabVtsDetallePedidos(new ArrayList<TabVtsDetallePedido>());
+		pedidoTmp.setMesa(12);
+		transaccionTmp.getTabVtsPedidos().add(pedidoTmp);
+		return pedidoTmp;
+	}
+
+	private void calcularPedidoTmp(TabVtsPedido pedidoTmp) {
+		double sumaTotales;
+		sumaTotales = 0;
+		for (TabVtsDetallePedido det : pedidoTmp.getTabVtsDetallePedidos()) {
+			sumaTotales += det.getCantidaddetallepedido().intValue() * det.getValorunitariodetallepedido().intValue();
+		}
+		pedidoTmp.setTotal(new BigDecimal(sumaTotales));
+	}
+
+	private int getContPedidos() throws Exception {
+		int contFacturas = 0;
+		TabParametro parametro = null;
+		try {
+			parametro = em.find(TabParametro.class, "cont_pedido");
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Revise el parametro 'cont_pedido': " + e.getMessage());
+		}
+		contFacturas = Integer.parseInt(parametro.getValorParametro());
+		return contFacturas;
+	}
+
+	private void actualizarContPedidos(int nuevoContadorPedidos) throws Exception {
+		TabParametro parametro = null;
+		try {
+			parametro = em.find(TabParametro.class, "cont_pedido");
+			parametro.setValorParametro(Integer.toString(nuevoContadorPedidos));
+			em.merge(parametro);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Error al actualizar el parametro 'cont_pedido': " + e.getMessage());
+		}
+	}
+
+	public void agregarDetallePedidoTmp(TabVtsPedido pedidoTmp, Integer idplato, Integer cantidad)
+			throws Exception {
+		TabVtsPlato p;
+		TabVtsDetallePedido d;
+		double valorTotal;
+
+		if (pedidoTmp == null)
+			throw new Exception("Error primero debe crear un nuevo Pedido.");
+		if (idplato == null || idplato.intValue() < 0)
+			throw new Exception("Error debe especificar el codigo del producto.");
+		if (cantidad == null || cantidad.intValue() <= 0)
+			throw new Exception("Error debe especificar la cantidad del producto.");
+
+		// buscamos el producto:
+		p = findPlatoById(idplato);
+		// creamos un nuevo detalle y llenamos sus propiedades:
+		d = new TabVtsDetallePedido();
+		valorTotal = cantidad * p.getValorplato().intValue();
+		d.setTabVtsPedido(pedidoTmp);
+		d.setCantidaddetallepedido(cantidad);
+		d.setValorunitariodetallepedido(p.getValorplato());
+		d.setTabVtsPlato(p);
+		d.setValorTotaldetallepedido(new BigDecimal(valorTotal));
+		pedidoTmp.getTabVtsDetallePedidos().add(d);
+
+		// verificamos los campos calculados:
+		calcularPedidoTmp(pedidoTmp);
+
+	}
+
+	public void guardarPedidoTemporal(TabCajTransaccion transaccionTmp, TabVtsPedido pedidoTmp)
+			throws Exception {
+
+		if (pedidoTmp == null)
+			throw new Exception("Debe crear un pedido primero.");
+		if (pedidoTmp.getTabVtsDetallePedidos() == null || pedidoTmp.getTabVtsDetallePedidos().size() == 0)
+			throw new Exception("Debe ingresar los productos en el pedido.");
+		if (pedidoTmp.getMesa() == null)
+			throw new Exception("Debe registrar la mesa.");
+
+		
+		pedidoTmp.setFechapedido(new Date());
+		transaccionTmp.setValortransaccion(pedidoTmp.getTotal());
+
+		// obtenemos el numero del nuevo pedido:
+		int contPedidos;
+		contPedidos = getContPedidos();
+		contPedidos++;
+		pedidoTmp.setIdpedido(contPedidos);
+
+		// verificamos los campos calculados:
+		calcularPedidoTmp(pedidoTmp);
+
+		// guardamos el pedido completa en la bdd:
+		em.persist(transaccionTmp);
+
+		// actualizamos los parametros contadores del pedido:
+		actualizarContPedidos(contPedidos);
+		pedidoTmp = null;
+
 	}
 
 }

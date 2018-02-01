@@ -54,6 +54,7 @@ public class ManagerFactura {
 		TabVtsFacturaVenta facturaCabTmp = new TabVtsFacturaVenta();
 		facturaCabTmp.setFechafacturaventa(new Date());
 		facturaCabTmp.setTabVtsDetalleVentas(new ArrayList<TabVtsDetalleVenta>());
+		
 		return facturaCabTmp;
 	}
 
@@ -185,11 +186,15 @@ public class ManagerFactura {
 		// creamos un nuevo detalle y llenamos sus propiedades:
 		fd = new TabVtsDetalleVenta();
 		valorTotal= cantidad * p.getValorplato().intValue();
+		
+		
 		fd.setTabVtsFacturaVenta(facturaCabTmp);		
 		fd.setCantidaddetalleventa(cantidad);
 		fd.setValorunitarioventa(p.getValorplato());
 		fd.setTabVtsPlato(p);
 		fd.setValortotalventa(new BigDecimal(valorTotal));
+		
+		//añadir el detalle dentro de la lista 
 		facturaCabTmp.getTabVtsDetalleVentas().add(fd);
 
 		// verificamos los campos calculados:
@@ -202,15 +207,6 @@ public class ManagerFactura {
 		return c;
 	}
 
-	public List<TabVtsCliente> findAllClientes() {
-		Query q;
-		List<TabVtsCliente> listado;
-		String sentenciaSQL;
-		sentenciaSQL = "SELECT c FROM TabVtsCliente c ORDER BY c.apellidocliente";
-		q = em.createQuery(sentenciaSQL);
-		listado = q.getResultList();
-		return listado;
-	}
 
 	public void guardarFacturaTemporal(TabVtsFacturaVenta facturaCabTmp) throws Exception {
 

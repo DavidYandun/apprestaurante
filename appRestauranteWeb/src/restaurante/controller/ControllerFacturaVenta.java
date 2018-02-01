@@ -38,7 +38,7 @@ public class ControllerFacturaVenta {
 	facturaCabTmp = managerFactura.crearFacturaVentaTmp();
 	idcliente = null;
 	idplato = 0;
-	cantidadplato = 0;
+	cantidadplato = 1;
 	facturaCabTmpGuardada = false;
 	
 	}
