@@ -41,25 +41,29 @@ public class ManagerPedido {
 		return p;
 	}
 
-	public TabCajTransaccion crearTransaccionTmp() {
-		TabLogUsuario usuario = em.find(TabLogUsuario.class, 1);
-
-		TabCajTransaccion transaccionTmp = new TabCajTransaccion();
-		transaccionTmp.setTabVtsPedidos(new ArrayList<TabVtsPedido>());
-		transaccionTmp.setDescripciontransaccion("pedido");
-		transaccionTmp.setTabLogUsuario(usuario);
-		return transaccionTmp;
-	}
-
 	public TabLogUsuario findUsuarioById(Integer idusuario) throws Exception {
 		TabLogUsuario usuario = em.find(TabLogUsuario.class, "idusuario");
 		return usuario;
 	}
 
+	public TabCajTransaccion crearTransaccionTmp() {
+		TabLogUsuario usuario = em.find(TabLogUsuario.class, 1);
+		TabCajTipoTransaccion tipotransaccion = em.find(TabCajTipoTransaccion.class, 1);
+		TabCajTransaccion transaccionTmp = new TabCajTransaccion();
+		TabCajCajero cajero = em.find(TabCajCajero.class,new Date());
+		
+		transaccionTmp.setTabCajTipoTransaccion(tipotransaccion);
+		transaccionTmp.setTabVtsPedidos(new ArrayList<TabVtsPedido>());
+		transaccionTmp.setDescripciontransaccion("pedido hecho en la fecha "+ new Date());
+		transaccionTmp.setTabLogUsuario(usuario);
+		transaccionTmp.setTabCajCajero(cajero);
+		return transaccionTmp;
+	}
+
 	public void asignarUsuarioTransTmp(TabCajTransaccion transaccionTmp, Integer idusuario) throws Exception {
 
 		TabLogUsuario usuario = null;
-		if (idusuario == null )
+		if (idusuario == null)
 			throw new Exception("Error debe especificar el usuario.");
 		try {
 			usuario = findUsuarioById(idusuario);
@@ -74,16 +78,25 @@ public class ManagerPedido {
 
 	public TabVtsPedido crearPedidoTmp(TabCajTransaccion transaccionTmp) {
 		TabVtsPedido pedidoTmp = new TabVtsPedido();
+		pedidoTmp.setTabCajTransaccion(transaccionTmp);
 		pedidoTmp.setFechapedido(new Date());
 		pedidoTmp.setTabVtsDetallePedidos(new ArrayList<TabVtsDetallePedido>());
-		pedidoTmp.setMesa(12);
 		transaccionTmp.getTabVtsPedidos().add(pedidoTmp);
 		return pedidoTmp;
 	}
+	public void asignarMesaPedidoTmp(TabVtsPedido pedidoTmp, Integer mesa) throws Exception {
+		try {
+			if (mesa == null|| mesa==0)
+				throw new Exception("Error debe especificar la mesa.");
+			pedidoTmp.setMesa(mesa);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Error al asignar mesa: " + e.getMessage());
+		}
+	}
 
 	private void calcularPedidoTmp(TabVtsPedido pedidoTmp) {
-		double sumaTotales;
-		sumaTotales = 0;
+		double sumaTotales = 0;
 		for (TabVtsDetallePedido det : pedidoTmp.getTabVtsDetallePedidos()) {
 			sumaTotales += det.getCantidaddetallepedido().intValue() * det.getValorunitariodetallepedido().intValue();
 		}
@@ -115,8 +128,7 @@ public class ManagerPedido {
 		}
 	}
 
-	public void agregarDetallePedidoTmp(TabVtsPedido pedidoTmp, Integer idplato, Integer cantidad)
-			throws Exception {
+	public void agregarDetallePedidoTmp(TabVtsPedido pedidoTmp, Integer idplato, Integer cantidad) throws Exception {
 		TabVtsPlato p;
 		TabVtsDetallePedido d;
 		double valorTotal;
@@ -139,23 +151,22 @@ public class ManagerPedido {
 		d.setTabVtsPlato(p);
 		d.setValorTotaldetallepedido(new BigDecimal(valorTotal));
 		pedidoTmp.getTabVtsDetallePedidos().add(d);
+		
 
 		// verificamos los campos calculados:
 		calcularPedidoTmp(pedidoTmp);
 
 	}
 
-	public void guardarPedidoTemporal(TabCajTransaccion transaccionTmp, TabVtsPedido pedidoTmp)
-			throws Exception {
+	public void guardarPedidoTemporal(TabCajTransaccion transaccionTmp, TabVtsPedido pedidoTmp) throws Exception {
 
 		if (pedidoTmp == null)
 			throw new Exception("Debe crear un pedido primero.");
 		if (pedidoTmp.getTabVtsDetallePedidos() == null || pedidoTmp.getTabVtsDetallePedidos().size() == 0)
 			throw new Exception("Debe ingresar los productos en el pedido.");
-		if (pedidoTmp.getMesa() == null)
+		if (pedidoTmp.getMesa() == 0)
 			throw new Exception("Debe registrar la mesa.");
 
-		
 		pedidoTmp.setFechapedido(new Date());
 		transaccionTmp.setValortransaccion(pedidoTmp.getTotal());
 

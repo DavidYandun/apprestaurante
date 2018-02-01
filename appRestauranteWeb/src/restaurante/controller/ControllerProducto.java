@@ -11,7 +11,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import restaurante.model.entities.TabInvProducto;
-import restaurante.model.entities.TabVtsCliente;
 import restaurante.model.entities.TabInvBodega;
 import restaurante.model.entities.TabInvCategoriaProducto;
 import restaurante.model.manager.ManagerProducto;

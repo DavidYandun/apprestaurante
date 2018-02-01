@@ -47,6 +47,16 @@ public class ControllerPedido {
 
 	}
 
+	public void crearNuevoPedido() {
+		transTemp = managerPedido.crearTransaccionTmp();
+		pedidoTmp = managerPedido.crearPedidoTmp(transTemp);
+		cantidad = 1;
+		idplato = 0;
+		mesa = 0;
+		transaccionTmpGuardada = false;
+		pedidoTmpGuardada = false;
+
+	}
 	public String insertarDetalle() {
 		if (transaccionTmpGuardada == true && pedidoTmpGuardada == true) {
 			JSFUtil.crearMensajeWarning("La factura ya fue guardada.");
@@ -62,6 +72,18 @@ public class ControllerPedido {
 		return "";
 	}
 
+	public void asignarMesa() {
+		if (pedidoTmpGuardada == true) {
+			JSFUtil.crearMensajeWarning("El pedido ya fue guardado.");
+		}
+		try {
+			managerPedido.asignarMesaPedidoTmp(pedidoTmp, mesa);
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError("Por favor asigne una mesa");
+			
+		}
+	}
+
 	public String guardarPedido() {
 		if (transaccionTmpGuardada == true && pedidoTmpGuardada == true) {
 			JSFUtil.crearMensajeWarning("El pedido ya fue guardada.");
@@ -72,6 +94,7 @@ public class ControllerPedido {
 
 			transaccionTmpGuardada = true;
 			pedidoTmpGuardada = true;
+			JSFUtil.crearMensajeInfo("Pedido guardado exitosamente");
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
 		}
@@ -126,6 +149,23 @@ public class ControllerPedido {
 	public void setTransTemp(TabCajTransaccion transTemp) {
 		this.transTemp = transTemp;
 	}
+	
+
+	public boolean isTransaccionTmpGuardada() {
+		return transaccionTmpGuardada;
+	}
+
+	public void setTransaccionTmpGuardada(boolean transaccionTmpGuardada) {
+		this.transaccionTmpGuardada = transaccionTmpGuardada;
+	}
+
+	public boolean isPedidoTmpGuardada() {
+		return pedidoTmpGuardada;
+	}
+
+	public void setPedidoTmpGuardada(boolean pedidoTmpGuardada) {
+		this.pedidoTmpGuardada = pedidoTmpGuardada;
+	}
 
 	public List<SelectItem> getListaPlatoSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
@@ -137,5 +177,6 @@ public class ControllerPedido {
 		}
 		return listadoSI;
 	}
+	
 
 }

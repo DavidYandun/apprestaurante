@@ -41,6 +41,11 @@
 	<p:panel id="panel1">
 		<h:form id="form2">
 			<p:panel header="Datos del Pedido">
+			<p:commandButton
+					rendered="#{controllerPedido.pedidoTmpGuardada}"
+					action="#{controllerPedido.crearNuevoPedido()}"
+					value="Crear nuevo Pedido" update="form2 :form3" />
+			
 				<p:panelGrid columns="2">
 					<h:outputText value="Nro. de Pedido:" style="font-weight: bold" />
 					<h:outputText value="#{controllerPedido.pedidoTmp.idpedido}" />
@@ -49,12 +54,15 @@
 						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
 					</h:outputText>
 					<h:outputText value="Seleccione la mesa:" style="font-weight: bold" />
-					<p:inputText value="#{controllerPedido.mesa}"></p:inputText>
+					<p:inputText value="#{controllerPedido.mesa}">
+					<p:ajax update="mensajes"
+								listener="#{controllerPedido.asignarMesa()}"></p:ajax>
+					</p:inputText>
 					<h:commandButton value="Guardar factura"
 						action="#{controllerPedido.guardarPedido()}" />
 					<p:messages id="mensajes" />
 					<h:commandButton value="Imprimir" type="button"
-						icon="ui-icon-print">
+						icon="ui-icon-print" rendered="#{controllerPedido.pedidoTmpGuardada}">
 						<p:printer target=":panel1" />
 					</h:commandButton>
 				</p:panelGrid>

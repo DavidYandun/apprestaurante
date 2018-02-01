@@ -1,6 +1,7 @@
 package restaurante.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -8,6 +9,8 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
+
+import com.sun.javafx.collections.MappingChange.Map;
 
 import restaurante.model.entities.TabVtsCliente;
 import restaurante.model.entities.TabVtsFacturaVenta;
@@ -35,13 +38,14 @@ public class ControllerFacturaVenta {
 
 	@PostConstruct
 	public void iniciar() {
-	facturaCabTmp = managerFactura.crearFacturaVentaTmp();
-	idcliente = null;
-	idplato = 0;
-	cantidadplato = 1;
-	facturaCabTmpGuardada = false;
-	
+		facturaCabTmp = managerFactura.crearFacturaVentaTmp();
+		idcliente = null;
+		idplato = 0;
+		cantidadplato = 1;
+		facturaCabTmpGuardada = false;
+
 	}
+
 	public ControllerFacturaVenta() {
 
 	}
@@ -53,8 +57,7 @@ public class ControllerFacturaVenta {
 	 * 
 	 * @return outcome para la navegacion.
 	 */
-	
-	
+
 	public String crearNuevaFactura() {
 		facturaCabTmp = managerFactura.crearFacturaVentaTmp();
 		idcliente = null;
@@ -191,5 +194,7 @@ public class ControllerFacturaVenta {
 		}
 		return listadoSI;
 	}
+
+	
 
 }
