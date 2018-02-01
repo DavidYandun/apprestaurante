@@ -4,34 +4,48 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui">
-
+<f:metadata>
+	<f:event listener="#{controllerUsuario.actionComprobarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
 <h:head>
 	<title>Platos</title>
 </h:head>
 <body>
 	<p:messages autoUpdate="true"></p:messages>
-	<h:outputText value="REY POLLO" style="padding-left: 10px; font-weight: bold; font-size: 175%" />
+	<div>
+		<div align="left">
+			<h:outputText value="REY POLLO"
+				style="padding-left: 10px; font-weight: bold; font-size: 175%; float: left" />
+		</div>
+		<div align="right" style="float: right">
+			<h:form>
+				<p:commandLink action="#{controllerUsuario.actionSalir()}"
+					value="Cerrar sesión" style="text-align: right; font-size: 150%"></p:commandLink>
+			</h:form>
+		</div>
+	</div>
+	<br />
+	<br />
 	<p:separator />
 	<div align="center">
 		<br />
 		<h:panelGrid columns="3">
-			<p:splitButton value="Inventario">
-				<p:menuitem value="Bodega" url="../Inventario/bodega.xhtml" />
-				<p:menuitem value="Categorías de producto"
-					url="../Inventario/categoriaproducto.xhtml" />
-				<p:menuitem value="Proveedores" url="../Inventario/proveedor.xhtml" />
-			</p:splitButton>
 			<p:splitButton value="Punto de Venta">
-				<p:menuitem value="Clientes" url="../Punto de venta/cliente.xhtml" />
-				<p:menuitem value="Facturas de Venta" url="../Punto de venta/facturaventa.xhtml" />
-				<p:menuitem value="Pedidos" url="../Punto de venta/pedido.xhtml" />
-				<p:menuitem value="Platos" url="../Punto de venta/plato.xhtml" />
-			</p:splitButton>
-			<p:splitButton value="Caja diaria">
-				<p:menuitem value="Tipo de Transacciones" url="../Caja diaria/tipotransaccion.xhtml" />
+				<p:menuitem value="Clientes" url="cliente.xhtml" />
+				<p:menuitem value="Facturas de Venta" url="facturaventa.xhtml" />
+				<p:menuitem value="Pedidos" url="pedido.xhtml" />
+				<p:menuitem value="Platos" url="plato.xhtml" />
 			</p:splitButton>
 		</h:panelGrid>
 	</div>
+	<br />
+	<br />
+	<p:breadCrumb>
+		<p:menuitem value="Punto de Venta" url="#" />
+		<p:menuitem value="Punto de Venta" url="#" />
+		<p:menuitem value="Platos" url="#" />
+	</p:breadCrumb>
 	<br />
 	<br />
 	<h:panelGrid columns="2">
