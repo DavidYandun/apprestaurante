@@ -84,8 +84,6 @@
 							<f:selectItem itemLabel="Seleccione..." itemValue=""
 								noSelectionOption="true" />
 							<f:selectItems value="#{controllerFacturaVenta.listaClientesSI}" />
-							<p:ajax update="idcliente,mensajes"
-								listener="#{controllerFacturaVenta.asignarCliente()}"></p:ajax>
 						</p:selectOneMenu>
 					</h:panelGroup>
 					<h:outputText value="Codigo del cliente:" style="font-weight: bold" />

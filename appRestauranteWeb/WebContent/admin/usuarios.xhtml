@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<f:metadata>
+	<f:event listener="#{controllerUsuario.actionComprobarLogin()}"
+		type="preRenderView"></f:event>
+</f:metadata>
+<h:head>
+	<title>Usuarios</title>
+</h:head>
+<body>
+	<p:messages autoUpdate="true"></p:messages>
+	<div>
+		<div align="left">
+			<h:outputText value="REY POLLO"
+				style="padding-left: 10px; font-weight: bold; font-size: 175%; float: left" />
+		</div>
+		<div align="right" style="float: right">
+			<h:form>
+				<p:commandLink action="#{controllerUsuario.actionSalir()}"
+					value="Cerrar sesión" style="text-align: right; font-size: 150%"></p:commandLink>
+			</h:form>
+		</div>
+	</div>
+	<br />
+	<br />
+	<p:separator />
+	<div align="center">
+		<br />
+		<h:panelGrid columns="3">
+			<p:splitButton value="Inventario">
+				<p:menuitem value="Bodega" url="bodega.xhtml" />
+				<p:menuitem value="Categorías de producto"
+					url="categoriaproducto.xhtml" />
+				<p:menuitem value="Proveedores" url="proveedor.xhtml" />
+			</p:splitButton>
+			<p:splitButton value="Punto de Venta">
+				<p:menuitem value="Clientes" url="../puntodeventa/cliente.xhtml" />
+				<p:menuitem value="Facturas de Venta"
+					url="../puntodeventa/facturaventa.xhtml" />
+				<p:menuitem value="Pedidos" url="../puntodeventa/pedido.xhtml" />
+				<p:menuitem value="Platos" url="../puntodeventa/plato.xhtml" />
+			</p:splitButton>
+			<p:splitButton value="Caja diaria">
+				<p:menuitem value="Tipo de Transacciones"
+					url="../cajadiaria/tipotransaccion.xhtml" />
+			</p:splitButton>
+		</h:panelGrid>
+	</div>
+	<br />
+	<br />
+	<p:breadCrumb>
+		<p:menuitem value="Inventario" url="#" />
+		<p:menuitem value="Inventario" url="#" />
+		<p:menuitem value="Proveedores" url="#" />
+	</p:breadCrumb>
+	<br />
+	<br />
+	<h:panelGrid columns="2">
+		<h:form id="form1">
+			<p:panel header="Nuevo Usuario">
+				<p:panelGrid columns="2">
+					<h:outputText value="Tipo usuario:" />
+					
+					<h:panelGroup>
+						<p:selectOneMenu value="#{controllerUsuario.idUsuario}">
+							<f:selectItem itemLabel="Seleccione..." itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{controllerUsuario.listaUsuariosSI}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					
+					<h:outputText value="Nombre: " />
+					<p:inputText value="#{controllerUsuario.nombreUsuario}"
+						required="true" requiredMessage="Especifique el nombre del usuario" />
+					<h:outputText value="Correo: " />
+					<p:inputText value="#{controllerUsuario.correoUsuario}"
+						required="true" requiredMessage="Especifique el correo" />
+					<h:outputText value="Contraseña: " />
+					<p:inputText value="#{controllerUsuario.passwordUsuario}"
+						required="true" requiredMessage="Especifique la contraseña"
+						type="password"/>
+				</p:panelGrid>
+				<p:commandButton value="Agregar" icon="ui-icon-disk"
+					update="@form,:form2:tabla1"
+					actionListener="#{controllerUsuario.AgregarUsario()}">
+				</p:commandButton>
+
+			</p:panel>
+		</h:form>
+
+		<h:form id="form2">
+			<p:panel header="LISTA DE REGISTROS">
+				<p:dataTable value="#{controllerUsuario.lista}" var="u"
+					id="tabla1">
+					<p:column headerText="Tipo de Usuario">
+						<h:outputText value="#{u.tabLogTipoUsuario.tipousuario}" />
+					</p:column>
+					<p:column headerText="Nombre">
+						<h:outputText value="#{u.nombreusuario}" />
+					</p:column>
+					<p:column headerText="Correo">
+						<h:outputText value="#{u.correousuario}" />
+					</p:column>
+					<p:column headerText="EDITAR">
+						<p:commandButton icon="ui-icon-pencil" update="form4"
+							onclick="PF('dialogo1').show();"
+							actionListener="#{controllerUsuario.CargarUsuario(u)}"></p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</h:panelGrid>
+
+	<p:dialog header="Edición de Usuario" widgetVar="dialogo1"
+		id="dialogo1" modal="true" height="275" hideEffect="fade">
+		<h:form id="form4">
+
+			<p:panelGrid columns="2">
+				<h:outputText value="Tipo usuario:" />
+					
+					<h:panelGroup>
+						<p:selectOneMenu value="#{controllerUsuario.idUsuario}">
+							<f:selectItem itemLabel="Seleccione..." itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{controllerUsuario.listaUsuariosSI}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					
+					<h:outputText value="Nombre: " />
+					<p:inputText value="#{controllerUsuario.nombreUsuario}"
+						required="true" requiredMessage="Especifique el nombre del usuario" />
+					<h:outputText value="Correo: " />
+					<p:inputText value="#{controllerUsuario.correoUsuario}"
+						required="true" requiredMessage="Especifique el correo" />
+					<h:outputText value="Contraseña: " />
+					<p:inputText value="#{controllerUsuario.passwordUsuario}"
+						required="true" requiredMessage="Especifique la contraseña"
+						type="password"/>
+			</p:panelGrid>
+			<p:commandButton value="Actualizar" update="@form,:form2:tabla1"
+				actionListener="#{controllerUsuario.EditarUsuario()}"
+				onclick="PF('modal').hide();$('#form4').trigger('reset');"></p:commandButton>
+		</h:form>
+	</p:dialog>
+</body>
+</html>

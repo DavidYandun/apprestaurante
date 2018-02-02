@@ -1,31 +1,37 @@
 package restaurante.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import restaurante.model.entities.TabLogUsuario;
-import restaurante.model.manager.ManagerLogin;
+import restaurante.model.manager.ManagerUsuario;
 import restaurante.model.util.ModelUtil;
 import restaurante.view.util.JSFUtil;
 
 @ManagedBean
 @SessionScoped
 public class ControllerUsuario {
-	private String idUsuario;
+	private int idUsuario;
 	private int idTipoUsuario;
 	private String nombreUsuario;
 	private String correoUsuario;
 	private String passwordUsuario;
+	private boolean estadoUsuario;
 	private TabLogUsuario u;
 	private boolean respuesta;
+	private List<TabLogUsuario> lista;
 
 	@EJB
-	private ManagerLogin managerUsuarios;
+	private ManagerUsuario managerUsuarios;
 
 	public String actionLogin() {
 		try {
@@ -92,11 +98,58 @@ public class ControllerUsuario {
 		}
 	}
 
-	public String getIdUsuario() {
+	@PostConstruct
+	public void iniciar() {
+		lista = managerUsuarios.findAllUsuarios();
+	}
+
+	public void AgregarUsario() {
+		try {
+			managerUsuarios.agregarusuario(idTipoUsuario, nombreUsuario, correoUsuario, passwordUsuario, estadoUsuario);
+			lista = managerUsuarios.findAllUsuarios();
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	public void CargarUsuario(TabLogUsuario usuario) {
+		idUsuario = usuario.getIdusuario();
+		idTipoUsuario = getIdTipoUsuario();
+		nombreUsuario = usuario.getNombreusuario();
+		correoUsuario = usuario.getCorreousuario();
+		passwordUsuario = usuario.getPasswordusuario();
+		estadoUsuario = usuario.getEstadousuario();
+	}
+
+	public void EditarUsuario() {
+		try {
+			managerUsuarios.editarusuario(idUsuario, idTipoUsuario, nombreUsuario, correoUsuario, passwordUsuario,
+					estadoUsuario);
+			lista = managerUsuarios.findAllUsuarios();
+			JSFUtil.crearMensajeInfo("Usuario editado correctamente.");
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	public List<SelectItem> getListaUsuariosSI() {
+		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
+		List<TabLogUsuario> listadoUsuarios = managerUsuarios.findAllUsuarios();
+
+		for (TabLogUsuario c : listadoUsuarios) {
+			SelectItem item = new SelectItem(c.getIdusuario(), c.getTabLogTipoUsuario().getTipousuario());
+			listadoSI.add(item);
+		}
+		return listadoSI;
+	}
+
+	public int getIdUsuario() {
 		return idUsuario;
 	}
 
-	public void setIdUsuario(String idUsuario) {
+	public void setIdUsuario(int idUsuario) {
 		this.idUsuario = idUsuario;
 	}
 
@@ -142,6 +195,22 @@ public class ControllerUsuario {
 
 	public boolean isRespuesta() {
 		return respuesta;
+	}
+
+	public boolean isEstadousuario() {
+		return estadoUsuario;
+	}
+
+	public void setEstadousuario(boolean estadousuario) {
+		this.estadoUsuario = estadousuario;
+	}
+
+	public List<TabLogUsuario> getLista() {
+		return lista;
+	}
+
+	public void setLista(List<TabLogUsuario> lista) {
+		this.lista = lista;
 	}
 
 }
