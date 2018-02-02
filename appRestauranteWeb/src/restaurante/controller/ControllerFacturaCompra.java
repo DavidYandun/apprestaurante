@@ -1,14 +1,26 @@
 package restaurante.controller;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import restaurante.model.entities.TabInvFacturaCompra;
 import restaurante.model.entities.TabInvProducto;
 import restaurante.model.entities.TabInvProveedor;
@@ -28,6 +40,8 @@ public class ControllerFacturaCompra {
 	private Integer idproducto;
 	private boolean facturaCabTmpGuardada;
 	private TabInvFacturaCompra facturaCabTmp;
+	private Integer idfacturacompra;
+
 	
 	@EJB
 	private ManagerFacturaCompra managerFacturaCompra;
@@ -77,12 +91,14 @@ public class ControllerFacturaCompra {
 		return "";
 	}
 	public String guardarFacturaCompra() {
+		
 		if(facturaCabTmpGuardada ==true ) {
 			JSFUtil.crearMensajeWarning("La factura ya fue creda");
 			return "";
 		}
 		try {
 			managerFacturaCompra.guardarFacturaTemporal(facturaCabTmp);
+			managerProducto.findAllProductos();
 			facturaCabTmpGuardada = true;			
 		}catch(Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
@@ -110,7 +126,43 @@ public class ControllerFacturaCompra {
 		}
 		return listadoSI;
 	}		
-	
+	public String actionReporte() {
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		
+		 parametros.put("idfacturacompra", 7);
+		// parametros.put("p_titulo",p_titulo);
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+		String ruta = servletContext.getRealPath("Inventario/facturacompr.jasper");
+		System.out.println(idfacturacompra);
+		HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+		response.addHeader("Content-disposition", "attachment;filename=facturacompr.pdf");
+		response.setContentType("application/pdf");
+		try {
+			Class.forName("org.postgresql.Driver");
+			Connection connection = null;
+			connection = DriverManager.getConnection("jdbc:postgresql://localhost:5433/restaurante", "postgres",
+					"12345");
+			JasperPrint impresion = JasperFillManager.fillReport(ruta, parametros, connection);
+			JasperExportManager.exportReportToPdfStream(impresion, response.getOutputStream());
+			context.getApplication().getStateManager().saveView(context);
+			System.out.println("reporte generado.");
+			context.responseComplete();
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	public Integer getIdfacturacompra() {
+		return idfacturacompra;
+	}
+
+	public void setIdfacturacompra(Integer idfacturacompra) {
+		this.idfacturacompra = idfacturacompra;
+	}
 	public Integer getIdproveedor() {
 		return idproveedor;
 	}

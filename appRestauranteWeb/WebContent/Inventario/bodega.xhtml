@@ -50,6 +50,17 @@
 				</p:commandButton>
 			</p:panel>
 		</h:form>
+		<h:form id="form3">
+			<p:panel header="Reporte">
+				<p:panelGrid columns="2">
+					<h:outputText value="Nombre de la Bodega:" />
+					<p:inputText value="#{controllerFacturaCompra.idfacturacompra}" />
+				</p:panelGrid>
+				<p:commandButton value="Agregar" icon="ui-icon-disk"  ajax="false"				
+					actionListener="#{controllerFacturaCompra.actionReporte()}">
+				</p:commandButton>
+			</p:panel>
+		</h:form>
 
 		<h:form id="form2">
 			<p:panel header="LISTA DE REGISTROS">

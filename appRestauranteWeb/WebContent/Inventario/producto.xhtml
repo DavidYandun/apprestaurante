@@ -1,9 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-	  xmlns:p="http://primefaces.org/ui">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
 
 <h:head>
 	<title>Producto</title>
@@ -42,23 +42,25 @@
 		<h:form id="form">
 			<p:panel header="Nuevo Producto">
 				<p:panelGrid columns="2">
-				<h:panelGroup>
-					<p:selectOneMenu value="#{controllerProducto.idcategoria}" style="width:191px" 
-					required="true" requiredMessage="Especifique la categoria">
-							<f:selectItem itemLabel="Seleccione la categoria        " itemValue=""
-								noSelectionOption="true" />
-							<f:selectItems value="#{controllerProducto.listaCategoriaSI}" />													
-						</p:selectOneMenu >
-					</h:panelGroup >	
-						<h:outputText value="IdCategoria:" />
-						<h:panelGroup>
-						<p:selectOneMenu value="#{controllerProducto.idbodega}" style="width:191px" 
-						required="true" requiredMessage="Especifique la bodega" >
+					<h:panelGroup>
+						<p:selectOneMenu value="#{controllerProducto.idcategoria}"
+							style="width:191px" required="true"
+							requiredMessage="Especifique la categoria">
+							<f:selectItem itemLabel="Seleccione la categoria        "
+								itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{controllerProducto.listaCategoriaSI}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:outputText value="IdCategoria:" />
+					<h:panelGroup>
+						<p:selectOneMenu value="#{controllerProducto.idbodega}"
+							style="width:191px" required="true"
+							requiredMessage="Especifique la bodega">
 							<f:selectItem itemLabel="Seleccione la bodega" itemValue=""
 								noSelectionOption="true" />
-							<f:selectItems  value="#{controllerProducto.listaProductoSI}" />													
-					</p:selectOneMenu>
-					</h:panelGroup >					
+							<f:selectItems value="#{controllerProducto.listaProductoSI}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
 					<h:outputText value="Idbodega:" />
 					<p:inputText value="#{controllerProducto.nombreproducto}"
 						required="true" requiredMessage="Especifique el nombre" />
@@ -67,40 +69,40 @@
 						required="true" requiredMessage="Especifique la descripción" />
 					<h:outputText value="Descripcion: " />
 					<p:inputText value="#{controllerProducto.valorcompra}"
-					required="true" requiredMessage="Especifique el valor" />
+						required="true" requiredMessage="Especifique el valor" />
 					<h:outputText value="ValorCompra: " />
 					<p:inputText value="#{controllerProducto.valorventa}"
 						required="true" requiredMessage="Especifique el valor" />
-					<h:outputText value="ValorVenta: " /> 					
-					<p:inputText value="#{controllerProducto.stock}"
-						required="true" requiredMessage="Especifique el stock" />
-					<h:outputText value="Stock: " />									
-					<p:selectOneMenu value="#{controllerProducto.estado}" style="width:191px" 
-					required="true" requiredMessage="Especifique el estado">
-            			<f:selectItem itemLabel="Seleccione el estado " itemValue="" />
-            			<f:selectItem itemLabel="true" itemValue="true" />
-            			<f:selectItem itemLabel="false" itemValue="false" />            			
-       				 </p:selectOneMenu>				
-					<h:outputText value="Estado: " />										
-					<p:selectOneMenu value="#{controllerProducto.unidadmedida}" effect="fold" editable="true"
-					required="true" requiredMessage="Especifique la unidad">
-            			<f:selectItem itemLabel="Seleccione la unidad " itemValue="" />
-            			<f:selectItems value="#{controllerProducto.listaUnidadSI}" />
-        			</p:selectOneMenu>									
+					<h:outputText value="ValorVenta: " />
+					<p:inputText value="#{controllerProducto.stock}" required="true"
+						requiredMessage="Especifique el stock" />
+					<h:outputText value="Stock: " />
+					<p:selectOneMenu value="#{controllerProducto.estado}"
+						style="width:191px" required="true"
+						requiredMessage="Especifique el estado">
+						<f:selectItem itemLabel="Seleccione el estado " itemValue="" />
+						<f:selectItem itemLabel="true" itemValue="true" />
+						<f:selectItem itemLabel="false" itemValue="false" />
+					</p:selectOneMenu>
+					<h:outputText value="Estado: " />
+					<p:selectOneMenu value="#{controllerProducto.unidadmedida}"
+						effect="fold" editable="true" required="true"
+						requiredMessage="Especifique la unidad">
+						<f:selectItem itemLabel="Seleccione la unidad " itemValue="" />
+						<f:selectItems value="#{controllerProducto.listaUnidadSI}" />
+					</p:selectOneMenu>
 					<h:outputText value="Unidad de Medida: " />
 				</p:panelGrid>
 				<p:commandButton value="Agregar" icon="ui-icon-disk"
 					update="@form,:form2:tabla1"
 					actionListener="#{controllerProducto.agregarProducto()}">
 				</p:commandButton>
-
 			</p:panel>
 		</h:form>
-
 		<h:form id="form2">
-			<p:panel header="LISTA DE REGISTROS">
-				<p:dataTable value="#{controllerProducto.lista}" var="p"
-					id="tabla1">
+					<p:panel header="LISTA DE REGISTROS" id="custom"
+				style="margin-bottom:20px" showDetail="true">
+				<p:dataTable value="#{controllerProducto.lista}" var="p" id="tabla1">
 					<h:panelGroup>
 						<p:selectOneMenu value="#{p.idproducto}">
 							<f:selectItem itemLabel="Seleccione..." itemValue=""
@@ -110,7 +112,7 @@
 								listener="#{controllerProducto.agregarProducto()}"></p:ajax>
 						</p:selectOneMenu>
 					</h:panelGroup>
-					
+
 					<p:column headerText="Bodega">
 						<h:outputText value="#{p.tabInvBodega.nombrebodega}" />
 					</p:column>
@@ -123,7 +125,7 @@
 					<p:column headerText="Descrición">
 						<h:outputText value="#{p.descripcionproducto}" />
 					</p:column>
-					<p:column headerText="Valor Compra" >
+					<p:column headerText="Valor Compra">
 						<h:outputText value="#{p.valorcompra}" />
 					</p:column>
 					<p:column headerText="Valor Venta">
@@ -144,10 +146,13 @@
 							actionListener="#{controllerProducto.CargarProducto(p)}"></p:commandButton>
 					</p:column>
 				</p:dataTable>
+				<f:facet name="actions" >				
+          <p:commandButton value="Reporte" title="Reporte" icon="ui-icon-print" ajax="false"
+						action="#{controllerProducto.actionReporte()}"  style="float:right;"/>      				
+				</f:facet>
 			</p:panel>
 		</h:form>
 	</h:panelGrid>
-
 	<p:dialog header="Edición de Proveedor" widgetVar="dialogo1"
 		id="dialogo1" modal="true" height="275" hideEffect="fade">
 		<h:form id="form4">
@@ -171,5 +176,6 @@
 				onclick="PF('modal').hide();$('#form4').trigger('reset');"></p:commandButton>
 		</h:form>
 	</p:dialog>
+
 </body>
 </html>
