@@ -33,7 +33,9 @@
 				<p:menuitem value="Bodega" url="../inventario/bodega.xhtml" />
 				<p:menuitem value="Categorías de producto"
 					url="../inventario/categoriaproducto.xhtml" />
+					<p:menuitem value="Productos" url="../inventario/producto.xhtml" />
 				<p:menuitem value="Proveedores" url="../inventario/proveedor.xhtml" />
+				<p:menuitem value="Factura de Compra" url="../inventario/facturacompra.xhtml" />
 			</p:splitButton>
 			<p:splitButton value="Punto de Venta">
 				<p:menuitem value="Clientes" url="../puntodeventa/cliente.xhtml" />
@@ -57,27 +59,113 @@
 	</p:breadCrumb>
 	<br />
 	<br />
-	<h:form>
-		<p:panel>
-			<h:outputText value="cantidad" />
-			<p:inputText value="#{controllerPedido.cantidad}" />
-			<h:outputText value="producto" />
-			<p:inputText value="#{controllerPedido.idproducto}" />
-			<h:outputText value="plato" />
-			<p:inputText value="#{controllerPedido.idplato}" />
-			<p:commandButton value="Agregar detalle"
-				actionListener="#{controllerPedido.AgregarDetalle()}" update="@form"></p:commandButton>
+	<p:panel id="panel1">
+		<h:form id="form2">
+			<p:panel header="Datos del Pedido">
+				<p:commandButton rendered="#{controllerPedido.pedidoTmpGuardada}"
+					action="#{controllerPedido.crearNuevoPedido()}"
+					value="Crear nuevo Pedido" update="form2 :form3" />
 
-			<p:dataTable
-				value="#{controllerPedido.pedidoTemp.tabVtsDetallePedidos}" var="d">
-				<p:column headerText="PK detalle"></p:column>
-				<h:outputText value="#{d.iddetallepedido}" />
-				<p:column headerText="CANTIDAD"></p:column>
-				<h:outputText value="#{d.cantidaddetallepedido}" />
-				<p:column headerText="NOMBRE PRODUCTO"></p:column>
-				<h:outputText value="#{d.valorunitariodetallepedido}" />
-			</p:dataTable>
-		</p:panel>
-	</h:form>
+				<p:panelGrid columns="2">
+					<h:outputText value="Nro. de Pedido:" style="font-weight: bold" />
+					<h:outputText value="#{controllerPedido.pedidoTmp.idpedido}" />
+					<h:outputText value="Fecha del pedido:" style="font-weight: bold" />
+					<h:outputText value="#{controllerPedido.pedidoTmp.fechapedido}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+					</h:outputText>
+					<h:outputText value="Seleccione la mesa:" style="font-weight: bold" />
+					<p:inputText value="#{controllerPedido.mesa}">
+						<p:ajax update="mensajes"
+							listener="#{controllerPedido.asignarMesa()}"></p:ajax>
+					</p:inputText>
+					<h:commandButton value="Guardar pedido"
+						action="#{controllerPedido.guardarPedido()}" />
+					<p:messages id="mensajes" />
+					<h:commandButton value="Imprimir" type="button"
+						icon="ui-icon-print"
+						rendered="#{controllerPedido.pedidoTmpGuardada}">
+						<p:printer target=":panel1" />
+					</h:commandButton>
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+		<h:form id="form3">
+			<p:panel header="Detalle de productos">
+				<p:panelGrid columns="5" border="1">
+					<h:outputText value="Plato:" />
+					<h:selectOneMenu value="#{controllerPedido.idplato}">
+						<f:selectItem itemLabel="Seleccione un plato..." itemValue="-1" />
+						<f:selectItems value="#{controllerPedido.listaPlatoSI}" />
+						<p:ajax update="mensajes2"></p:ajax>
+					</h:selectOneMenu>
+					<h:outputText value="Cantidad:" />
+					<h:inputText value="#{controllerPedido.cantidad}" />
+					<p:commandButton value="adicionar"
+						action="#{controllerPedido.insertarDetalle()}" update="form3"
+						icon="ui-icon-plusthick" />
+				</p:panelGrid>
+				<p:messages id="mensajes2"></p:messages>
+				<p:dataTable
+					value="#{controllerPedido.pedidoTmp.tabVtsDetallePedidos}" var="d"
+					id="tablaFacturaDets">
+					<f:facet name="header">
+						<h:outputText value="Detalle de platos:" />
+					</f:facet>
+
+					<p:column style="width:40px">
+						<f:facet name="header">
+					CANT
+				</f:facet>
+						<h:outputText value="#{d.cantidaddetallepedido}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+					PRODUCTO
+				</f:facet>
+						<h:outputText value="#{d.tabVtsPlato.nombreplato}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+					DESCRIPCION
+				</f:facet>
+						<h:outputText value="#{d.tabVtsPlato.descripccionplato}" />
+					</p:column>
+					<p:column style="width:100px">
+						<f:facet name="header">
+					P.Unit
+				</f:facet>
+						<h:outputText value="#{d.valorunitariodetallepedido}" />
+
+						<f:facet name="footer">
+							<h:panelGrid columns="1"
+								style="font-weight: bold; text-align:right">
+								<h:outputText value="TOTAL:" />
+							</h:panelGrid>
+						</f:facet>
+					</p:column>
+
+					<p:column style="width:120px;text-align:right">
+						<f:facet name="header">
+					P.Total
+				</f:facet>
+						<h:outputText value="#{d.valorTotaldetallepedido}"
+							maxFractionDigits="2" minFractionDigits="2"
+							style="text-align:right" />
+						<f:facet name="footer">
+							<h:panelGrid columns="1"
+								style="font-weight: bold; text-align:right">
+
+								<h:outputText value="#{controllerPedido.pedidoTmp.total}">
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
+										currencySymbol="$" />
+								</h:outputText>
+							</h:panelGrid>
+						</f:facet>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</p:panel>
+
 </body>
 </html>

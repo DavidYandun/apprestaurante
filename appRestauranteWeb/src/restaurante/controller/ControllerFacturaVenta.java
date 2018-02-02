@@ -1,7 +1,7 @@
 package restaurante.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -9,8 +9,6 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
-
-import com.sun.javafx.collections.MappingChange.Map;
 
 import restaurante.model.entities.TabVtsCliente;
 import restaurante.model.entities.TabVtsFacturaVenta;

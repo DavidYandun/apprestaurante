@@ -36,7 +36,9 @@
 				<p:menuitem value="Bodega" url="../inventario/bodega.xhtml" />
 				<p:menuitem value="Categorías de producto"
 					url="../inventario/categoriaproducto.xhtml" />
+					<p:menuitem value="Productos" url="../inventario/producto.xhtml" />
 				<p:menuitem value="Proveedores" url="../inventario/proveedor.xhtml" />
+				<p:menuitem value="Factura de Compra" url="../inventario/facturacompra.xhtml" />
 			</p:splitButton>
 			<p:splitButton value="Punto de Venta">
 				<p:menuitem value="Clientes" url="cliente.xhtml" />
@@ -65,6 +67,7 @@
 		<h:form id="form2">
 			<p:panel header="Datos de la factura">
 				<p:commandButton
+					
 					action="#{controllerFacturaVenta.crearNuevaFactura()}"
 					value="Crear nueva factura" update="form2 :form3" />
 				<p:panelGrid columns="2">
@@ -88,10 +91,15 @@
 								listener="#{controllerFacturaVenta.asignarCliente()}"></p:ajax>
 						</p:selectOneMenu>
 					</h:panelGroup>
-					<h:outputText value="Codigo del cliente:" style="font-weight: bold" />
+					<h:outputText value="Cédula del cliente:" style="font-weight: bold" />
 					<h:outputText id="idcliente"
 						value="#{controllerFacturaVenta.idcliente}" />
-					<h:commandButton value="Guardar factura" action="#" />
+
+					<p:commandButton icon="ui-icon-pencil" value="Nuevo Cliente"
+						update="form4" onclick="PF('dialogo1').show();"></p:commandButton>
+
+					<h:commandButton value="Guardar factura"
+						action="#{controllerFacturaVenta.guardarFactura()}" />
 					<p:messages id="mensajes" />
 					<h:commandButton value="Imprimir"
 						rendered="#{controllerFacturaVenta.facturaCabTmpGuardada}"
@@ -123,11 +131,12 @@
 					<f:facet name="header">
 						<h:outputText value="Detalle de platos:" />
 					</f:facet>
-					<p:column style="width:60px">
+
+					<p:column style="width:40px">
 						<f:facet name="header">
-					CODIGO
+					CANT
 				</f:facet>
-						<h:outputText value="#{d.tabVtsPlato.idplato}" />
+						<h:outputText value="#{d.cantidaddetalleventa}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
@@ -143,38 +152,46 @@
 					</p:column>
 					<p:column style="width:100px">
 						<f:facet name="header">
-					P/U
+					P.Unit
 				</f:facet>
 						<h:outputText value="#{d.valorunitarioventa}" />
+
+						<f:facet name="footer">
+							<h:panelGrid columns="1"
+								style="font-weight: bold; text-align:right">
+								<h:outputText value="SUBTOTAL" />
+								<h:outputText value="IVA:" />
+								<h:outputText value="TOTAL:" />
+							</h:panelGrid>
+						</f:facet>
 					</p:column>
-					<p:column style="width:40px">
-						<f:facet name="header">
-					CANT
-				</f:facet>
-						<h:outputText value="#{d.cantidaddetalleventa}" />
-					</p:column>
+
 					<p:column style="width:120px;text-align:right">
 						<f:facet name="header">
-					SUBTOTAL
+					P.Total
 				</f:facet>
-						<h:outputText
-							value="#{d.cantidaddetalleventa * d.valorunitarioventa}"
-							style="text-align:right" />
+						<h:outputText value="#{d.valortotalventa}" maxFractionDigits="2"
+							minFractionDigits="2" style="text-align:right" />
 						<f:facet name="footer">
-							<h:panelGrid columns="2"
+						</f:facet>
+						<f:facet name="footer">
+							<h:panelGrid columns="1"
 								style="font-weight: bold; text-align:right">
-								<h:outputText value="SUMA:" />
-								<h:outputText value="#{beanFactura.facturaCabTmp.subtotal}">
+
+								<h:outputText
+									value="#{controllerFacturaVenta.facturaCabTmp.subtotalfacturaventa}">
 									<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
 										currencySymbol="$" />
 								</h:outputText>
-								<h:outputText value="IVA:" />
-								<h:outputText value="">
+
+								<h:outputText
+									value="#{controllerFacturaVenta.facturaCabTmp.ivafacturaventa}">
 									<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
 										currencySymbol="$" />
 								</h:outputText>
-								<h:outputText value="TOTAL:" />
-								<h:outputText value="">
+
+								<h:outputText
+									value="#{controllerFacturaVenta.facturaCabTmp.totalfacturaventa}">
 									<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
 										currencySymbol="$" />
 								</h:outputText>
@@ -185,5 +202,34 @@
 			</p:panel>
 		</h:form>
 	</p:panel>
+
+	<p:dialog header="Nuevo Cliente" widgetVar="dialogo1" id="dialogo1"
+		modal="true" height="275" hideEffect="fade">
+		<h:form id="form4">
+
+			<p:panelGrid columns="2">
+				<h:outputText value="Cédula:" />
+				<p:inputText value="#{controllerCliente.idcliente}" />
+				<h:outputText value="Nombre:" />
+				<p:inputText value="#{controllerCliente.nombrecliente}"
+					required="true" />
+				<h:outputText value="Apellido:" />
+				<p:inputText value="#{controllerCliente.apellidocliente}"
+					required="true" />
+				<h:outputText value="Dirección: " />
+				<p:inputText value="#{controllerCliente.direccioncliente}"
+					required="true" requiredMessage="Especifique el nombre" />
+				<h:outputText value="Teléfono: " />
+				<p:inputText value="#{controllerCliente.telefonocliente}"
+					required="true" requiredMessage="Especifique el nombre" />
+				<h:outputText value="Correo Electrónico: " />
+				<p:inputText value="#{controllerCliente.correocliente}"
+					required="true" requiredMessage="Especifique el nombre" />
+			</p:panelGrid>
+			<p:commandButton value="Actualizar"
+				actionListener="#{controllerCliente.AgregarCliente()}"
+				onclick="PF('modal').hide();$('#form4').trigger('reset');"></p:commandButton>
+		</h:form>
+	</p:dialog>
 </body>
 </html>
