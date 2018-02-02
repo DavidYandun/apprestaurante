@@ -39,24 +39,24 @@
 	<br />
 	<br />
 	<h:panelGrid columns="2">
-		<h:form id="form1">
+		<h:form id="form">
 			<p:panel header="Nuevo Producto">
 				<p:panelGrid columns="2">
 				<h:panelGroup>
-					<p:selectOneMenu value="#{controllerProducto.idcategoria}">
-							<f:selectItem itemLabel="Seleccione...          " itemValue=""
+					<p:selectOneMenu value="#{controllerProducto.idcategoria}" style="width:191px" 
+					required="true" requiredMessage="Especifique la categoria">
+							<f:selectItem itemLabel="Seleccione la categoria        " itemValue=""
 								noSelectionOption="true" />
-							<f:selectItems value="#{controllerProducto.listaCategoriaSI}" />
-														
+							<f:selectItems value="#{controllerProducto.listaCategoriaSI}" />													
 						</p:selectOneMenu >
 					</h:panelGroup >	
 						<h:outputText value="IdCategoria:" />
 						<h:panelGroup>
-						<p:selectOneMenu value="#{controllerProducto.idbodega}">
-							<f:selectItem itemLabel="Seleccione...          " itemValue="-1"
+						<p:selectOneMenu value="#{controllerProducto.idbodega}" style="width:191px" 
+						required="true" requiredMessage="Especifique la bodega" >
+							<f:selectItem itemLabel="Seleccione la bodega" itemValue=""
 								noSelectionOption="true" />
-							<f:selectItems  value="#{controllerProducto.listaProductoSI}" />							
-						
+							<f:selectItems  value="#{controllerProducto.listaProductoSI}" />													
 					</p:selectOneMenu>
 					</h:panelGroup >					
 					<h:outputText value="Idbodega:" />
@@ -71,15 +71,22 @@
 					<h:outputText value="ValorCompra: " />
 					<p:inputText value="#{controllerProducto.valorventa}"
 						required="true" requiredMessage="Especifique el valor" />
-					<h:outputText value="ValorVenta: " />
+					<h:outputText value="ValorVenta: " /> 					
 					<p:inputText value="#{controllerProducto.stock}"
 						required="true" requiredMessage="Especifique el stock" />
-					<h:outputText value="Stock: " />
-					<p:inputText value="#{controllerProducto.estado}"
-						required="true" requiredMessage="Especifique el estado" />
-					<h:outputText value="Estado: " />
-					<p:inputText value="#{controllerProducto.unidadmedida}"
-						required="true" requiredMessage="Especifique la unidad" />
+					<h:outputText value="Stock: " />									
+					<p:selectOneMenu value="#{controllerProducto.estado}" style="width:191px" 
+					required="true" requiredMessage="Especifique el estado">
+            			<f:selectItem itemLabel="Seleccione el estado " itemValue="" />
+            			<f:selectItem itemLabel="true" itemValue="true" />
+            			<f:selectItem itemLabel="false" itemValue="false" />            			
+       				 </p:selectOneMenu>				
+					<h:outputText value="Estado: " />										
+					<p:selectOneMenu value="#{controllerProducto.unidadmedida}" effect="fold" editable="true"
+					required="true" requiredMessage="Especifique la unidad">
+            			<f:selectItem itemLabel="Seleccione la unidad " itemValue="" />
+            			<f:selectItems value="#{controllerProducto.listaUnidadSI}" />
+        			</p:selectOneMenu>									
 					<h:outputText value="Unidad de Medida: " />
 				</p:panelGrid>
 				<p:commandButton value="Agregar" icon="ui-icon-disk"

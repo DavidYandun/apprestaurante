@@ -18,6 +18,7 @@
 		<h:panelGrid columns="3">
 			<p:splitButton value="Inventario">
 				<p:menuitem value="Producto" url="../Inventario/producto.xhtml" />
+				<p:menuitem value="Facturas de Compras" url="../Inventario/facturacompra.xhtml" />
 				<p:menuitem value="Bodega" url="../Inventario/bodega.xhtml" />
 				<p:menuitem value="Categorías de producto"
 					url="../Inventario/categoriaproducto.xhtml" />
@@ -46,19 +47,13 @@
 					action="#{controllerFacturaVenta.crearNuevaFactura()}"
 					value="Crear nueva factura" update="form2 :form3" />
 				<p:panelGrid columns="2">
-					<h:outputText value="Nro. de factura:" style="font-weight: bold" />
-					<h:outputText
-						value="#{controllerFacturaVenta.facturaCabTmp.idfacturaventa}" />
-					<h:outputText value="Fecha de la factura:"
-						style="font-weight: bold" />
-					<h:outputText
-						value="#{controllerFacturaVenta.facturaCabTmp.fechafacturaventa}">
-						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
-					</h:outputText>
+				
+					<h:outputText value="Nro. de factura:" />										
+					<h:inputText value="#{controllerFacturaVenta.facturaCabTmp.fechafacturaventa}" />
 					<h:outputText value="Seleccione el cliente:"
 						style="font-weight: bold" />
 					<h:panelGroup>
-						<p:selectOneMenu value="#{controllerFacturaVenta.idcliente}">
+						<p:selectOneMenu value="#{controllerFacturaVenta.idcliente}">						
 							<f:selectItem itemLabel="Seleccione..." itemValue=""
 								noSelectionOption="true" />
 							<f:selectItems value="#{controllerFacturaVenta.listaClientesSI}" />
@@ -66,6 +61,7 @@
 								listener="#{controllerFacturaVenta.asignarCliente()}"></p:ajax>
 						</p:selectOneMenu>
 					</h:panelGroup>
+					
 					<h:outputText value="Cédula del cliente:" style="font-weight: bold" />
 					<h:outputText id="idcliente"
 						value="#{controllerFacturaVenta.idcliente}" />

@@ -38,15 +38,23 @@ public class ControllerProducto {
 	
 	@PostConstruct
 	public void iniciar() {
-		lista = managerProducto.findAllProducto();
+		lista = managerProducto.findAllProductos();
 	}
 	
 	public List<SelectItem> getListaProductoSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
 		List<TabInvBodega> listadoProdcutos = managerProducto.findAllBodegas();
-
 		for (TabInvBodega c : listadoProdcutos) {
 			SelectItem item = new SelectItem(c.getIdbodega(),c.getNombrebodega());
+			listadoSI.add(item);
+		}
+		return listadoSI;
+	}
+	public List<SelectItem> getListaUnidadSI() {
+		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
+		List<TabInvProducto> listadoProdcutos = managerProducto.findAllProductos();
+		for (TabInvProducto c : listadoProdcutos) {
+			SelectItem item = new SelectItem(c.getUnidadmedida());
 			listadoSI.add(item);
 		}
 		return listadoSI;
@@ -66,7 +74,7 @@ public class ControllerProducto {
 	public void agregarProducto() {
 		try {
 			managerProducto.agregarproducto(idcategoria, idbodega, nombreproducto, descripcionproducto, valorcompra, valorventa, stock, estado, unidadmedida);
-			lista = managerProducto.findAllProducto();
+			lista = managerProducto.findAllProductos();
 			JSFUtil.crearMensajeInfo("Producto registrado.");
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
@@ -98,7 +106,7 @@ public class ControllerProducto {
 		try {
 			managerProducto.editarproducto(idproducto, idcategoria, idbodega, nombreproducto, descripcionproducto, valorcompra, valorventa, stock, estado, unidadmedida);
 
-			lista = managerProducto.findAllProducto();
+			lista = managerProducto.findAllProductos();
 			JSFUtil.crearMensajeInfo("Producto con nombre" + nombreproducto + " editado correctamente.");
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());

@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Facturas de Compras</title>
+</h:head>
+<body>
+	<h:outputText value="REY POLLO"
+		style="padding-left: 10px; font-weight: bold; font-size: 175%" />
+	<p:separator />
+	<div align="center">
+		<br />
+		<h:panelGrid columns="3">
+			<p:splitButton value="Inventario">
+				<p:menuitem value="Producto" url="../Inventario/producto.xhtml" />
+				<p:menuitem value="Facturas de Compras"
+					url="../Inventario/facturacompra.xhtml" />
+				<p:menuitem value="Bodega" url="../Inventario/bodega.xhtml" />
+				<p:menuitem value="Categorías de producto"
+					url="../Inventario/categoriaproducto.xhtml" />
+				<p:menuitem value="Proveedores" url="../Inventario/proveedor.xhtml" />
+			</p:splitButton>
+			<p:splitButton value="Punto de Venta">
+				<p:menuitem value="Clientes" url="cliente.xhtml" />
+				<p:menuitem value="Facturas de Venta" url="facturaventa.xhtml" />
+				<p:menuitem value="Pedidos" url="pedido.xhtml" />
+				<p:menuitem value="Platos" url="plato.xhtml" />
+			</p:splitButton>
+			<p:splitButton value="Caja diaria">
+				<p:menuitem value="Tipo de Transacciones"
+					url="../Caja diaria/tipotransaccion.xhtml" />
+			</p:splitButton>
+		</h:panelGrid>
+	</div>
+	<br />
+	<br />
+
+	<p:panel id="panel1">
+		<h:form id="form2">
+			<p:panel header="Datos de la factura de compra">
+				<p:commandButton
+					rendered="#{controllerFacturaCompra.facturaCabTmpGuardada}"
+					action="#{controllerFacturaCompra.crearNuevaFacturaCompra()}"
+					value="Crear nueva factura de Compra" update="form2 :form3" />
+				<p:panelGrid columns="2">
+					<h:outputText value="Nro. de factura:" style="font-weight: bold" />
+					<h:outputText
+						value="#{controllerFacturaCompra.facturaCabTmp.idfacturacompra}" />
+					<h:outputText value="Fecha de la factura:"
+						style="font-weight: bold" />
+					<p:calendar id="button"
+						value="#{controllerFacturaCompra.facturaCabTmp.fechafacturacompra}"
+						showOn="button" />
+
+					<h:outputText value="Seleccione el Proveedor:"
+						style="font-weight: bold" />
+					<h:panelGroup>
+						<p:selectOneMenu value="#{controllerFacturaCompra.idproveedor}">
+							<f:selectItem itemLabel="Seleccione..." itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems
+								value="#{controllerFacturaCompra.listaProveedoreSI}" />
+							<p:ajax update="" listener="#{controllerFacturaCompra.asignarProveedor()}"></p:ajax>
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<p:commandButton icon="ui-icon-pencil" value="Nuevo Proveedor"
+						update="form4" onclick="PF('dialogo1').show();"></p:commandButton>
+						
+					<h:commandButton value="Guardar factura"
+						action="#{controllerFacturaCompra.guardarFacturaCompra()}" />
+					<p:messages id="mensajes" />
+					
+					<h:commandButton value="Imprimir"
+						rendered="#{controllerFacturaCompra.facturaCabTmpGuardada}"
+						type="button" icon="ui-icon-print">
+						<p:printer target=":panel1" />
+					</h:commandButton>
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+		<h:form id="form3">
+			<p:panel header="Detalle de productos">
+				<p:panelGrid columns="7" border="1">
+					<h:outputText value="Producto:" />
+					<h:panelGrid columns="2">
+					<p:commandButton icon="ui-icon-pencil" update="form5"
+							onclick="PF('dialogo2').show();"></p:commandButton>
+						<h:selectOneMenu value="#{controllerFacturaCompra.idproducto}">
+							<f:selectItem itemLabel="Seleccione un producto..." itemValue="" />
+							<f:selectItems value="#{controllerFacturaCompra.listaProductosSI}" />
+							<p:ajax update="mensajes2"></p:ajax>
+						</h:selectOneMenu>											
+					</h:panelGrid>
+					<h:outputText value="Cantidad:" />
+					<p:inputNumber value="#{controllerFacturaCompra.cantidadcompra}"
+						minValue="0" maxValue="1000" />
+
+					<h:outputText value="ValorUnitario:" />
+					<p:inputNumber
+						value="#{controllerFacturaCompra.valorunitariocompra}"
+						minValue="0.01" maxValue="1000000.00" />
+					<p:commandButton value="adicionar"
+						action="#{controllerFacturaCompra.insertarDetalleCompra()}"
+						update="form3" icon="ui-icon-plusthick" />
+				</p:panelGrid>
+				<p:messages id="mensajes2"></p:messages>
+				<p:dataTable
+					value="#{controllerFacturaCompra.facturaCabTmp.tabInvDetalleCompras}"
+					var="d" id="tablaFacturaCompraDets">
+					<f:facet name="header">
+						<h:outputText value="Detalle de productos:" />
+					</f:facet>
+
+					<p:column style="width:40px">
+						<f:facet name="header">
+					CANT
+				</f:facet>
+						<h:outputText value="#{d.cantidaddetalle}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+					PRODUCTO
+				</f:facet>
+						<h:outputText value="#{d.tabInvProducto.nombreproducto}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+					DESCRIPCION
+				</f:facet>
+						<h:outputText value="#{d.tabInvProducto.descripcionproducto}" />
+					</p:column>
+					<p:column style="width:100px">
+						<f:facet name="header">
+					P.Unit
+				</f:facet>
+						<h:outputText value="#{d.valorunitariocompra}" />
+
+						<f:facet name="footer">
+							<h:panelGrid columns="1"
+								style="font-weight: bold; text-align:right">
+								<h:outputText value="SUBTOTAL" />
+								<h:outputText value="IVA:" />
+								<h:outputText value="TOTAL:" />
+							</h:panelGrid>
+						</f:facet>
+					</p:column>
+
+					<p:column style="width:120px;text-align:right">
+						<f:facet name="header">
+					P.Total
+				</f:facet>
+						<h:outputText value="#{d.valortotalcompra}" maxFractionDigits="2"
+							minFractionDigits="2" style="text-align:right" />
+						<f:facet name="footer">
+						</f:facet>
+						<f:facet name="footer">
+							<h:panelGrid columns="1"
+								style="font-weight: bold; text-align:right">
+
+								<h:outputText
+									value="#{controllerFacturaCompra.facturaCabTmp.ivafacturacompra}">
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
+										currencySymbol="$" />
+								</h:outputText>
+
+								<h:outputText
+									value="#{controllerFacturaCompra.facturaCabTmp.subtotalfacturacompra}">
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
+										currencySymbol="$" />
+								</h:outputText>
+
+								<h:outputText
+									value="#{controllerFacturaCompra.facturaCabTmp.totalfacturacompra}">
+									<f:convertNumber maxFractionDigits="2" minFractionDigits="2"
+										currencySymbol="$" />
+								</h:outputText>
+							</h:panelGrid>
+						</f:facet>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</p:panel>
+	<p:dialog header="Nuevo Proveedor" widgetVar="dialogo1" id="dialogo1"
+		modal="true" height="275" hideEffect="fade">
+		<h:form id="form4">
+			<p:panelGrid columns="2">
+				<h:outputText value="Nombre:" />
+				<p:inputText value="#{controllerProveedor.nombreproveedor}"
+					required="true" />
+				<h:outputText value="Teléfono: " />
+				<p:inputText value="#{controllerProveedor.telefonoproveedor}"
+					required="true" />
+				<h:outputText value="Dirección: " />
+				<p:inputText value="#{controllerCliente.direccioncliente}"
+					required="true" requiredMessage="Especifique el nombre" />
+				<h:outputText value="Correo Electrónico: " />
+				<p:inputText value="#{controllerCliente.correocliente}"
+					required="true" requiredMessage="Especifique el nombre" />
+			</p:panelGrid>
+			<p:commandButton value="Actualizar"
+				actionListener="#{controllerProveedor.agregarProveedor()}"
+				onclick="PF('modal').hide();$('#form4').trigger('reset');"></p:commandButton>
+		</h:form>
+	</p:dialog>
+	
+	<p:dialog header="Nuevo Producto" widgetVar="dialogo2" id="dialogo2"
+		modal="true" height="475" hideEffect="fade">
+		<h:form id="form5">
+			<p:panel header="Nuevo Producto">
+				<p:panelGrid columns="2">
+					<h:panelGroup>
+						<p:selectOneMenu value="#{controllerProducto.idcategoria}"
+							style="width:191px" required="true"
+							requiredMessage="Especifique la categoria">
+							<f:selectItem itemLabel="Seleccione la categoria        "
+								itemValue="" noSelectionOption="true" />
+							<f:selectItems value="#{controllerProducto.listaCategoriaSI}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:outputText value="IdCategoria:" />
+					<h:panelGroup>
+						<p:selectOneMenu value="#{controllerProducto.idbodega}"
+							style="width:191px" required="true"
+							requiredMessage="Especifique la bodega">
+							<f:selectItem itemLabel="Seleccione la bodega" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{controllerProducto.listaProductoSI}" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+					<h:outputText value="Idbodega:" />
+					<p:inputText value="#{controllerProducto.nombreproducto}"
+						required="true" requiredMessage="Especifique el nombre" />
+					<h:outputText value="Nombre: " />
+					<p:inputText value="#{controllerProducto.descripcionproducto}"
+						required="true" requiredMessage="Especifique la descripción" />
+					<h:outputText value="Descripcion: " />
+					<p:inputText value="#{controllerProducto.valorcompra}"
+						required="true" requiredMessage="Especifique el valor" />
+					<h:outputText value="ValorCompra: " />
+					<p:inputText value="#{controllerProducto.valorventa}"
+						required="true" requiredMessage="Especifique el valor" />
+					<h:outputText value="ValorVenta: " />
+					<p:inputText value="#{controllerProducto.stock}" required="true"
+						requiredMessage="Especifique el stock" />
+					<h:outputText value="Stock: " />
+					<p:selectOneMenu value="#{controllerProducto.estado}" style="width:191px"
+						required="true" requiredMessage="Especifique el estado">
+						<f:selectItem itemLabel="Seleccione el estado " itemValue="" />
+						<f:selectItem itemLabel="true" itemValue="true" />
+						<f:selectItem itemLabel="false" itemValue="false" />
+					</p:selectOneMenu>
+					<h:outputText value="Estado: " />
+					<p:selectOneMenu value="#{controllerProducto.unidadmedida}"
+						effect="fold" editable="true" required="true"
+						requiredMessage="Especifique la unidad">
+						<f:selectItem itemLabel="Seleccione la unidad " itemValue="" />
+						<f:selectItems value="#{controllerProducto.listaUnidadSI}" />
+					</p:selectOneMenu>
+					<h:outputText value="Unidad de Medida: " />
+				</p:panelGrid>
+				<p:commandButton value="Actualizar"
+					actionListener="#{controllerProducto.agregarProducto()}"
+					onclick="PF('modal').hide();$('#form5').trigger('reset');"></p:commandButton>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+</body>
+</html>

@@ -88,22 +88,25 @@ public class ManagerFactura {
 	 * @param facturaCabTmp
 	 *            Factura temporal creada en memoria.
 	 */
-	private void calcularFacturaTmp(TabVtsFacturaVenta facturaCabTmp) {
-		double Subtotal, porcentajeIVA, valorIVA, sumaTotales;
-		// verificamos los campos calculados:
-		sumaTotales = 0;
-		for (TabVtsDetalleVenta det : facturaCabTmp.getTabVtsDetalleVentas()) {
-			sumaTotales += det.getCantidaddetalleventa().intValue() * det.getValorunitarioventa().intValue();
+	private void calcularFacturaTmp(TabVtsFacturaVenta facturaCabTmp){
+		double sumaSubtotales;
+		double porcentajeIVA,valorIVA,totalFactura;
+		//verificamos los campos calculados:
+		sumaSubtotales=0;
+		for(TabVtsDetalleVenta det:facturaCabTmp.getTabVtsDetalleVentas()){
+			sumaSubtotales+= det.getCantidaddetalleventa().intValue() * det.getValorunitarioventa().doubleValue();
 		}
-
-		porcentajeIVA = getPorcentajeIVA();
-		Subtotal = sumaTotales /((100 + porcentajeIVA) / 100);
-		valorIVA = sumaTotales - Subtotal;
-
-		facturaCabTmp.setSubtotalfacturaventa(new BigDecimal(Subtotal));
+		
+		porcentajeIVA=getPorcentajeIVA();
+		valorIVA=sumaSubtotales*porcentajeIVA/100;
+		totalFactura=sumaSubtotales+valorIVA;
+		
+		facturaCabTmp.setSubtotalfacturaventa(new BigDecimal(sumaSubtotales));
 		facturaCabTmp.setIvafacturaventa(new BigDecimal(valorIVA));
-		facturaCabTmp.setTotalfacturaventa(new BigDecimal(sumaTotales));
+		//facturaCabTmp.setBaseCero(new BigDecimal(0));//no calculamos la base cero en este ejemplo.
+		facturaCabTmp.setTotalfacturaventa(new BigDecimal(totalFactura));
 	}
+	
 
 	public double getPorcentajeIVA() {
 		TabParametro parametro;

@@ -40,6 +40,7 @@ public class ManagerProducto {
 		listado = q.getResultList();
 		return listado;
 	}
+    
   
     public List<TabInvBodega> findAllBodegas() {
 		Query q;
@@ -120,17 +121,4 @@ public class ManagerProducto {
 		em.persist(p);
     	
     }
-    public List<TabInvProducto> findAllProducto() {
-		Query q;
-		List<TabInvProducto> listado;
-		String sentenciaSQL;
-		sentenciaSQL = "SELECT c FROM TabInvProducto c ORDER BY c.nombreproducto";
-		q = em.createQuery(sentenciaSQL);
-		listado = q.getResultList();
-		return listado;
-	}
-    
-
-     
-
 }
