@@ -17,7 +17,7 @@ public class TabInvProducto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TAB_INV_PRODUCTO_IDPRODUCTO_GENERATOR", sequenceName="TAB_INV_PRODUCTO_SEQ")
+	@SequenceGenerator(name="TAB_INV_PRODUCTO_IDPRODUCTO_GENERATOR", sequenceName="TAB_INV_PRODUCTO_SEQ",allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TAB_INV_PRODUCTO_IDPRODUCTO_GENERATOR")
 	@Column(unique=true, nullable=false)
 	private Integer idproducto;

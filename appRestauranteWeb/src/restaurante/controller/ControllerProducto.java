@@ -1,15 +1,27 @@
 package restaurante.controller;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import restaurante.model.entities.TabInvProducto;
 import restaurante.model.entities.TabInvBodega;
 import restaurante.model.entities.TabInvCategoriaProducto;
@@ -33,22 +45,22 @@ public class ControllerProducto {
 	
 	@EJB
 	private ManagerProducto managerProducto;
-	
-	
+
 	@PostConstruct
 	public void iniciar() {
 		lista = managerProducto.findAllProductos();
 	}
-	
+
 	public List<SelectItem> getListaProductoSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
 		List<TabInvBodega> listadoProdcutos = managerProducto.findAllBodegas();
 		for (TabInvBodega c : listadoProdcutos) {
-			SelectItem item = new SelectItem(c.getIdbodega(),c.getNombrebodega());
+			SelectItem item = new SelectItem(c.getIdbodega(), c.getNombrebodega());
 			listadoSI.add(item);
 		}
 		return listadoSI;
 	}
+
 	public List<SelectItem> getListaUnidadSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
 		List<TabInvProducto> listadoProdcutos = managerProducto.findAllProductos();
@@ -58,52 +70,55 @@ public class ControllerProducto {
 		}
 		return listadoSI;
 	}
+
 	public List<SelectItem> getListaCategoriaSI() {
 		List<SelectItem> listadoCSI = new ArrayList<SelectItem>();
 		List<TabInvCategoriaProducto> listadoCategoria = managerProducto.findAllCategorias();
 
 		for (TabInvCategoriaProducto c : listadoCategoria) {
-			SelectItem item = new SelectItem(c.getIdcategoria(),c.getNombrecategoria());
+			SelectItem item = new SelectItem(c.getIdcategoria(), c.getNombrecategoria());
 			listadoCSI.add(item);
 		}
 		return listadoCSI;
 	}
 
-	
 	public void agregarProducto() {
 		try {
-			managerProducto.agregarproducto(idcategoria, idbodega, nombreproducto, descripcionproducto, valorcompra, valorventa, stock, estado, unidadmedida);
+			managerProducto.agregarproducto(idcategoria, idbodega, nombreproducto, descripcionproducto, valorcompra,
+					valorventa, stock, estado, unidadmedida);
 			lista = managerProducto.findAllProductos();
 			JSFUtil.crearMensajeInfo("Producto registrado.");
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
 			e.printStackTrace();
 		}
-		idcategoria=null;
-		idbodega=null;
-		nombreproducto="";
-		descripcionproducto="";
-		valorcompra=null;
-		valorventa=null;
-		stock=null;		
-		unidadmedida="";
+		idcategoria = null;
+		idbodega = null;
+		nombreproducto = "";
+		descripcionproducto = "";
+		valorcompra = null;
+		valorventa = null;
+		stock = null;
+		unidadmedida = "";
 	}
+
 	public void CargarProducto(TabInvProducto producto) {
 		idproducto = producto.getIdproducto();
-		idcategoria=producto.getTabInvCategoriaProducto().getIdcategoria();
-		idbodega=producto.getTabInvBodega().getIdbodega();
-		nombreproducto=producto.getNombreproducto();
-		descripcionproducto=producto.getDescripcionproducto();
-		valorcompra=producto.getValorcompra();
-		valorventa=producto.getValorventa();		
-		stock=producto.getStock();
-		unidadmedida=producto.getUnidadmedida();
-		estado =producto.getEstadoproducto();				
+		idcategoria = producto.getTabInvCategoriaProducto().getIdcategoria();
+		idbodega = producto.getTabInvBodega().getIdbodega();
+		nombreproducto = producto.getNombreproducto();
+		descripcionproducto = producto.getDescripcionproducto();
+		valorcompra = producto.getValorcompra();
+		valorventa = producto.getValorventa();
+		stock = producto.getStock();
+		unidadmedida = producto.getUnidadmedida();
+		estado = producto.getEstadoproducto();
 	}
-	
+
 	public void EditarProveedor() {
 		try {
-			managerProducto.editarproducto(idproducto, idcategoria, idbodega, nombreproducto, descripcionproducto, valorcompra, valorventa, stock, estado, unidadmedida);
+			managerProducto.editarproducto(idproducto, idcategoria, idbodega, nombreproducto, descripcionproducto,
+					valorcompra, valorventa, stock, estado, unidadmedida);
 
 			lista = managerProducto.findAllProductos();
 			JSFUtil.crearMensajeInfo("Producto con nombre" + nombreproducto + " editado correctamente.");
@@ -111,16 +126,45 @@ public class ControllerProducto {
 			JSFUtil.crearMensajeError(e.getMessage());
 			e.printStackTrace();
 		}
-		idcategoria=null;
-		idbodega=null;
-		nombreproducto="";
-		descripcionproducto="";
-		valorcompra=null;
-		valorventa=null;
-		stock=null;		
-		unidadmedida="";
+		idcategoria = null;
+		idbodega = null;
+		nombreproducto = "";
+		descripcionproducto = "";
+		valorcompra = null;
+		valorventa = null;
+		stock = null;
+		unidadmedida = "";
 	}
-	
+
+	public String actionReporte() {
+		Map<String, Object> parametros = new HashMap<String, Object>();
+		
+		 // parametros.put("idfacturacompra", idfacturacompra);
+		//  parametros.put("p_titulo",p_titulo);
+		 
+		FacesContext context = FacesContext.getCurrentInstance();
+		ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+		String ruta = servletContext.getRealPath("bodeguero/inventario/Productos.jasper");
+		System.out.println(ruta);
+		HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+		response.addHeader("Content-disposition", "attachment;filename=Prodcutos.pdf");
+		response.setContentType("application/pdf");
+		try {
+			Class.forName("org.postgresql.Driver");
+			Connection connection = null;
+			connection = DriverManager.getConnection("jdbc:postgresql://localhost:5433/restaurante", "postgres",
+					"12345");
+			JasperPrint impresion = JasperFillManager.fillReport(ruta, parametros, connection);
+			JasperExportManager.exportReportToPdfStream(impresion, response.getOutputStream());
+			context.getApplication().getStateManager().saveView(context);
+			System.out.println("reporte generado.");
+			context.responseComplete();
+		} catch (Exception e) {
+			JSFUtil.crearMensajeError(e.getMessage());
+			e.printStackTrace();
+		}
+		return "";
+	}
 
 	public Integer getIdproducto() {
 		return idproducto;
@@ -216,5 +260,5 @@ public class ControllerProducto {
 
 	public void setManagerProducto(ManagerProducto managerProducto) {
 		this.managerProducto = managerProducto;
-	}	
+	}
 }
