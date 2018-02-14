@@ -16,7 +16,7 @@ public class TabLogUsuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="TAB_LOG_USUARIO_IDUSUARIO_GENERATOR", sequenceName="TAB_LOG_USUARIO_SEQ")
+	@SequenceGenerator(name="TAB_LOG_USUARIO_IDUSUARIO_GENERATOR", sequenceName="TAB_LOG_USUARIO_SEQ",allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TAB_LOG_USUARIO_IDUSUARIO_GENERATOR")
 	@Column(unique=true, nullable=false)
 	private Integer idusuario;

@@ -30,32 +30,38 @@
 	<p:separator />
 	<div align="center">
 		<br />
-		<h:panelGrid columns="3">
+		<h:panelGrid columns="4">
 			<p:splitButton value="Inventario">
-				<p:menuitem value="Bodega" url="bodega.xhtml" />
+				<p:menuitem value="Bodega" url="inventario/bodega.xhtml" />
 				<p:menuitem value="Categorías de producto"
-					url="categoriaproducto.xhtml" />
-				<p:menuitem value="Proveedores" url="proveedor.xhtml" />
+					url="inventario/categoriaproducto.xhtml" />
+				<p:menuitem value="Productos" url="inventario/producto.xhtml" />
+				<p:menuitem value="Proveedores" url="inventario/proveedor.xhtml" />
+				<p:menuitem value="Factura de Compra" url="inventario/facturacompra.xhtml" />
 			</p:splitButton>
 			<p:splitButton value="Punto de Venta">
-				<p:menuitem value="Clientes" url="../puntodeventa/cliente.xhtml" />
+				<p:menuitem value="Clientes" url="puntodeventa/cliente.xhtml" />
 				<p:menuitem value="Facturas de Venta"
-					url="../puntodeventa/facturaventa.xhtml" />
-				<p:menuitem value="Pedidos" url="../puntodeventa/pedido.xhtml" />
-				<p:menuitem value="Platos" url="../puntodeventa/plato.xhtml" />
+					url="puntodeventa/facturaventa.xhtml" />
+				<p:menuitem value="Pedidos" url="puntodeventa/pedido.xhtml" />
+				<p:menuitem value="Platos" url="puntodeventa/plato.xhtml" />
 			</p:splitButton>
-			<p:splitButton value="Caja diaria">
+			<p:splitButton value="Caja">
 				<p:menuitem value="Tipo de Transacciones"
-					url="../cajadiaria/tipotransaccion.xhtml" />
+					url="cajadiaria/tipotransaccion.xhtml" />
+					<p:menuitem value="Caja Diaria"
+					url="cajadiaria/cajadiaria.xhtml" />
+			</p:splitButton>
+			<p:splitButton value="Administración">
+				<p:menuitem value="Usuarios" url="usuarios.xhtml"></p:menuitem>
 			</p:splitButton>
 		</h:panelGrid>
 	</div>
 	<br />
 	<br />
 	<p:breadCrumb>
-		<p:menuitem value="Inventario" url="#" />
-		<p:menuitem value="Inventario" url="#" />
-		<p:menuitem value="Proveedores" url="#" />
+		<p:menuitem value="Usuarios" url="#" />
+		
 	</p:breadCrumb>
 	<br />
 	<br />
@@ -74,13 +80,13 @@
 					</h:panelGroup>
 					
 					<h:outputText value="Nombre: " />
-					<p:inputText value="#{controllerUsuario.nombreUsuario}"
+					<p:inputText value="#{controllerUsuario.nombreUsuario1}"
 						required="true" requiredMessage="Especifique el nombre del usuario" />
 					<h:outputText value="Correo: " />
-					<p:inputText value="#{controllerUsuario.correoUsuario}"
+					<p:inputText value="#{controllerUsuario.correoUsuario1}"
 						required="true" requiredMessage="Especifique el correo" />
 					<h:outputText value="Contraseña: " />
-					<p:inputText value="#{controllerUsuario.passwordUsuario}"
+					<p:inputText value="#{controllerUsuario.passwordUsuario1}"
 						required="true" requiredMessage="Especifique la contraseña"
 						type="password"/>
 				</p:panelGrid>
@@ -123,7 +129,7 @@
 				<h:outputText value="Tipo usuario:" />
 					
 					<h:panelGroup>
-						<p:selectOneMenu value="#{controllerUsuario.idUsuario}">
+						<p:selectOneMenu value="#{controllerUsuario.idTipoUsuario}">
 							<f:selectItem itemLabel="Seleccione..." itemValue=""
 								noSelectionOption="true" />
 							<f:selectItems value="#{controllerUsuario.listaUsuariosSI}" />
@@ -131,13 +137,13 @@
 					</h:panelGroup>
 					
 					<h:outputText value="Nombre: " />
-					<p:inputText value="#{controllerUsuario.nombreUsuario}"
+					<p:inputText value="#{controllerUsuario.nombreUsuario1}"
 						required="true" requiredMessage="Especifique el nombre del usuario" />
 					<h:outputText value="Correo: " />
-					<p:inputText value="#{controllerUsuario.correoUsuario}"
+					<p:inputText value="#{controllerUsuario.correoUsuario1}"
 						required="true" requiredMessage="Especifique el correo" />
 					<h:outputText value="Contraseña: " />
-					<p:inputText value="#{controllerUsuario.passwordUsuario}"
+					<p:inputText value="#{controllerUsuario.passwordUsuario1}"
 						required="true" requiredMessage="Especifique la contraseña"
 						type="password"/>
 			</p:panelGrid>

@@ -38,8 +38,8 @@ public class ManagerFactura {
 	// Manejo de Platos
 	@SuppressWarnings("unchecked")
 	
-	public TabVtsPlato findPlatoById(int idplato) throws Exception {
-		TabVtsPlato p = em.find(TabVtsPlato.class, idplato);
+	public TabInvProducto findProductoById(int idproducto) throws Exception {
+		TabInvProducto p = em.find(TabInvProducto.class, idproducto);
 		return p;
 	}
 
@@ -94,7 +94,7 @@ public class ManagerFactura {
 		// verificamos los campos calculados:
 		sumaTotales = 0;
 		for (TabVtsDetalleVenta det : facturaCabTmp.getTabVtsDetalleVentas()) {
-			sumaTotales += det.getCantidaddetalleventa().intValue() * det.getValorunitarioventa().intValue();
+			sumaTotales += det.getCantidaddetalleventa().doubleValue() * det.getValorunitarioventa().doubleValue();
 		}
 
 		porcentajeIVA = getPorcentajeIVA();
@@ -168,30 +168,30 @@ public class ManagerFactura {
 	 * @throws Exception
 	 *             problemas ocurridos al momento de insertar el item detalle.
 	 */
-	public void agregarDetalleFacturaTmp(TabVtsFacturaVenta facturaCabTmp, Integer idplato, Integer cantidad)
+	public void agregarDetalleFacturaTmp(TabVtsFacturaVenta facturaCabTmp, Integer idproducto, Integer cantidad)
 			throws Exception {
-		TabVtsPlato p;
+		TabInvProducto p;
 		TabVtsDetalleVenta fd;
 		double valorTotal;
 
 		if (facturaCabTmp == null)
 			throw new Exception("Error primero debe crear una nueva factura.");
-		if (idplato == null || idplato.intValue() < 0)
+		if (idproducto == null || idproducto.intValue() < 0)
 			throw new Exception("Error debe especificar el codigo del producto.");
 		if (cantidad == null || cantidad.intValue() <= 0)
 			throw new Exception("Error debe especificar la cantidad del producto.");
 
 		// buscamos el producto:
-		p = findPlatoById(idplato);
+		p = findProductoById(idproducto);
 		// creamos un nuevo detalle y llenamos sus propiedades:
 		fd = new TabVtsDetalleVenta();
-		valorTotal= cantidad * p.getValorplato().intValue();
+		valorTotal= cantidad * p.getValorventa().doubleValue();
 		
 		
 		fd.setTabVtsFacturaVenta(facturaCabTmp);		
 		fd.setCantidaddetalleventa(cantidad);
-		fd.setValorunitarioventa(p.getValorplato());
-		fd.setTabVtsPlato(p);
+		fd.setValorunitarioventa(p.getValorventa());
+		fd.setTabInvProducto(p);
 		fd.setValortotalventa(new BigDecimal(valorTotal));
 		
 		//añadir el detalle dentro de la lista 

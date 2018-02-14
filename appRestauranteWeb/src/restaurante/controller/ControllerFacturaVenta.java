@@ -10,12 +10,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import restaurante.model.entities.TabInvProducto;
 import restaurante.model.entities.TabVtsCliente;
 import restaurante.model.entities.TabVtsFacturaVenta;
 import restaurante.model.entities.TabVtsPlato;
 import restaurante.model.manager.ManagerCliente;
 import restaurante.model.manager.ManagerFactura;
 import restaurante.model.manager.ManagerPlato;
+import restaurante.model.manager.ManagerProducto;
 import restaurante.view.util.JSFUtil;
 
 @ManagedBean
@@ -28,8 +30,8 @@ public class ControllerFacturaVenta {
 	@EJB
 	private ManagerCliente managerCliente;
 	@EJB
-	private ManagerPlato managerPlato;
-	private Integer idplato;
+	private ManagerProducto managerProducto;
+	private Integer idproducto;
 	private Integer cantidadplato;
 	private TabVtsFacturaVenta facturaCabTmp;
 	private boolean facturaCabTmpGuardada;
@@ -38,7 +40,7 @@ public class ControllerFacturaVenta {
 	public void iniciar() {
 		facturaCabTmp = managerFactura.crearFacturaVentaTmp();
 		idcliente = null;
-		idplato = 0;
+		idproducto = 0;
 		cantidadplato = 1;
 		facturaCabTmpGuardada = false;
 
@@ -59,7 +61,7 @@ public class ControllerFacturaVenta {
 	public String crearNuevaFactura() {
 		facturaCabTmp = managerFactura.crearFacturaVentaTmp();
 		idcliente = null;
-		idplato = 0;
+		idproducto = 0;
 		cantidadplato = 0;
 		facturaCabTmpGuardada = false;
 		return "";
@@ -95,8 +97,8 @@ public class ControllerFacturaVenta {
 			return "";
 		}
 		try {
-			managerFactura.agregarDetalleFacturaTmp(facturaCabTmp, idplato, cantidadplato);
-			idplato = 0;
+			managerFactura.agregarDetalleFacturaTmp(facturaCabTmp, idproducto, cantidadplato);
+			idproducto = 0;
 			cantidadplato = 1;
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
@@ -127,12 +129,12 @@ public class ControllerFacturaVenta {
 		this.idcliente = idcliente;
 	}
 
-	public Integer getIdplato() {
-		return idplato;
+	public Integer getIdproducto() {
+		return idproducto;
 	}
 
-	public void setIdplato(Integer idplato) {
-		this.idplato = idplato;
+	public void setIdproducto(Integer idproducto) {
+		this.idproducto = idproducto;
 	}
 
 	public Integer getCantidadplato() {
@@ -184,15 +186,13 @@ public class ControllerFacturaVenta {
 	 */
 	public List<SelectItem> getListaPlatoSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
-		List<TabVtsPlato> listadoPlatos = managerPlato.findAllPlatos();
+		List<TabInvProducto> listadoProductos = managerProducto.findAllProductos();
 
-		for (TabVtsPlato p : listadoPlatos) {
-			SelectItem item = new SelectItem(p.getIdplato(), p.getNombreplato());
+		for (TabInvProducto p : listadoProductos) {
+			SelectItem item = new SelectItem(p.getIdproducto(), p.getNombreproducto());
 			listadoSI.add(item);
 		}
 		return listadoSI;
 	}
-
-	
 
 }

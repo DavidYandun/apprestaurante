@@ -55,7 +55,6 @@
 		<h:form id="form2">
 			<p:panel header="Datos de la factura">
 				<p:commandButton
-					rendered="#{controllerFacturaVenta.facturaCabTmpGuardada}"
 					action="#{controllerFacturaVenta.crearNuevaFactura()}"
 					value="Crear nueva factura" update="form2 :form3" />
 				<p:panelGrid columns="2">
@@ -101,7 +100,7 @@
 			<p:panel header="Detalle de productos">
 				<p:panelGrid columns="5" border="1">
 					<h:outputText value="Plato:" />
-					<h:selectOneMenu value="#{controllerFacturaVenta.idplato}">
+					<h:selectOneMenu value="#{controllerFacturaVenta.idproducto}">
 						<f:selectItem itemLabel="Seleccione un plato..." itemValue="-1" />
 						<f:selectItems value="#{controllerFacturaVenta.listaPlatoSI}" />
 						<p:ajax update="mensajes2"></p:ajax>
@@ -130,13 +129,13 @@
 						<f:facet name="header">
 					PRODUCTO
 				</f:facet>
-						<h:outputText value="#{d.tabVtsPlato.nombreplato}" />
+						<h:outputText value="#{d.tabInvProducto.nombreproducto}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
 					DESCRIPCION
 				</f:facet>
-						<h:outputText value="#{d.tabVtsPlato.descripccionplato}" />
+						<h:outputText value="#{d.tabInvProducto.descripcionproducto}" />
 					</p:column>
 					<p:column style="width:100px">
 						<f:facet name="header">

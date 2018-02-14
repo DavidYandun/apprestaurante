@@ -30,14 +30,15 @@
 	<p:separator />
 	<div align="center">
 		<br />
-		<h:panelGrid columns="3">
+		<h:panelGrid columns="4">
 			<p:splitButton value="Inventario">
 				<p:menuitem value="Bodega" url="../inventario/bodega.xhtml" />
 				<p:menuitem value="Categorías de producto"
 					url="../inventario/categoriaproducto.xhtml" />
-					<p:menuitem value="Productos" url="../inventario/producto.xhtml" />
+				<p:menuitem value="Productos" url="../inventario/producto.xhtml" />
 				<p:menuitem value="Proveedores" url="../inventario/proveedor.xhtml" />
-				<p:menuitem value="Factura de Compra" url="../inventario/facturacompra.xhtml" />
+				<p:menuitem value="Factura de Compra"
+					url="../inventario/facturacompra.xhtml" />
 			</p:splitButton>
 			<p:splitButton value="Punto de Venta">
 				<p:menuitem value="Clientes" url="cliente.xhtml" />
@@ -45,8 +46,14 @@
 				<p:menuitem value="Pedidos" url="pedido.xhtml" />
 				<p:menuitem value="Platos" url="plato.xhtml" />
 			</p:splitButton>
-			<p:splitButton value="Caja diaria">
-				<p:menuitem value="Tipo de Transacciones" url="../cajadiaria/tipotransaccion.xhtml" />
+			<p:splitButton value="Caja">
+				<p:menuitem value="Tipo de Transacciones"
+					url="../cajadiaria/tipotransaccion.xhtml" />
+					<p:menuitem value="Caja Diaria"
+					url="../cajadiaria/cajadiaria.xhtml" />
+			</p:splitButton>
+			<p:splitButton value="Administración">
+				<p:menuitem value="Usuarios" url="../usuarios.xhtml"></p:menuitem>
 			</p:splitButton>
 		</h:panelGrid>
 	</div>

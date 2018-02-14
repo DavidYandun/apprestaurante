@@ -10,10 +10,12 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import restaurante.model.entities.TabCajTransaccion;
+import restaurante.model.entities.TabInvProducto;
 import restaurante.model.entities.TabVtsPedido;
 import restaurante.model.entities.TabVtsPlato;
 import restaurante.model.manager.ManagerPedido;
 import restaurante.model.manager.ManagerPlato;
+import restaurante.model.manager.ManagerProducto;
 import restaurante.view.util.JSFUtil;
 
 @SessionScoped
@@ -23,11 +25,11 @@ public class ControllerPedido {
 	@EJB
 	private ManagerPedido managerPedido;
 	@EJB
-	private ManagerPlato managerPlato;
+	private ManagerProducto managerProducto;
 
 	private int cantidad;
 
-	private int idplato;
+	private int idproducto;
 	private int mesa;
 	private int idusuario;
 	private TabVtsPedido pedidoTmp;
@@ -40,7 +42,7 @@ public class ControllerPedido {
 		transTemp = managerPedido.crearTransaccionTmp();
 		pedidoTmp = managerPedido.crearPedidoTmp(transTemp);
 		cantidad = 1;
-		idplato = 0;
+		idproducto = 0;
 		mesa = 0;
 		transaccionTmpGuardada = false;
 		pedidoTmpGuardada = false;
@@ -51,7 +53,7 @@ public class ControllerPedido {
 		transTemp = managerPedido.crearTransaccionTmp();
 		pedidoTmp = managerPedido.crearPedidoTmp(transTemp);
 		cantidad = 1;
-		idplato = 0;
+		idproducto = 0;
 		mesa = 0;
 		transaccionTmpGuardada = false;
 		pedidoTmpGuardada = false;
@@ -63,8 +65,8 @@ public class ControllerPedido {
 			return "";
 		}
 		try {
-			managerPedido.agregarDetallePedidoTmp(pedidoTmp, idplato, cantidad);
-			idplato = 0;
+			managerPedido.agregarDetallePedidoTmp(pedidoTmp, idproducto, cantidad);
+			idproducto = 0;
 			cantidad = 1;
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
@@ -110,12 +112,12 @@ public class ControllerPedido {
 		this.cantidad = cantidad;
 	}
 
-	public int getIdplato() {
-		return idplato;
+	public int getIdproducto() {
+		return idproducto;
 	}
 
-	public void setIdplato(int idplato) {
-		this.idplato = idplato;
+	public void setIdproducto(int idproducto) {
+		this.idproducto = idproducto;
 	}
 
 	public int getMesa() {
@@ -169,10 +171,10 @@ public class ControllerPedido {
 
 	public List<SelectItem> getListaPlatoSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
-		List<TabVtsPlato> listadoPlatos = managerPlato.findAllPlatos();
+		List<TabInvProducto> listadoPlatos = managerProducto.findAllProductos();
 
-		for (TabVtsPlato p : listadoPlatos) {
-			SelectItem item = new SelectItem(p.getIdplato(), p.getNombreplato());
+		for (TabInvProducto p : listadoPlatos) {
+			SelectItem item = new SelectItem(p.getIdproducto(), p.getNombreproducto());
 			listadoSI.add(item);
 		}
 		return listadoSI;

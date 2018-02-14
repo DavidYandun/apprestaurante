@@ -12,6 +12,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import restaurante.model.entities.TabLogTipoUsuario;
 import restaurante.model.entities.TabLogUsuario;
 import restaurante.model.manager.ManagerUsuario;
 import restaurante.model.util.ModelUtil;
@@ -25,7 +26,12 @@ public class ControllerUsuario {
 	private String nombreUsuario;
 	private String correoUsuario;
 	private String passwordUsuario;
-	private boolean estadoUsuario;
+	
+	private String nombreUsuario1;
+	private String correoUsuario1;
+	private String passwordUsuario1;
+	
+	private boolean estadoUsuario=true;
 	private TabLogUsuario u;
 	private boolean respuesta;
 	private List<TabLogUsuario> lista;
@@ -68,9 +74,9 @@ public class ControllerUsuario {
 			if (path.equals("/login.xhtml"))
 				return;
 			if (ModelUtil.isEmpty(u.getIdusuario() + ""))
-				ec.redirect(ec.getRequestContextPath() + "/faces/login.xhtml");
+				ec.redirect(ec.getRequestContextPath() + "faces/login.xhtml");
 			if (!respuesta) {
-				ec.redirect(ec.getRequestContextPath() + "/faces/login.xhtml");
+				ec.redirect(ec.getRequestContextPath() + "faces/login.xhtml");
 			} else {
 				// si hizo login, verificamos que acceda a paginas permitidas:
 				if (u.getTabLogTipoUsuario().getTipousuario().equals("admin")) {
@@ -101,11 +107,12 @@ public class ControllerUsuario {
 	@PostConstruct
 	public void iniciar() {
 		lista = managerUsuarios.findAllUsuarios();
+		
 	}
 
 	public void AgregarUsario() {
 		try {
-			managerUsuarios.agregarusuario(idTipoUsuario, nombreUsuario, correoUsuario, passwordUsuario, estadoUsuario);
+			managerUsuarios.agregarusuario(idTipoUsuario, nombreUsuario1, correoUsuario1, passwordUsuario1, estadoUsuario);
 			lista = managerUsuarios.findAllUsuarios();
 		} catch (Exception e) {
 			JSFUtil.crearMensajeError(e.getMessage());
@@ -116,15 +123,15 @@ public class ControllerUsuario {
 	public void CargarUsuario(TabLogUsuario usuario) {
 		idUsuario = usuario.getIdusuario();
 		idTipoUsuario = getIdTipoUsuario();
-		nombreUsuario = usuario.getNombreusuario();
-		correoUsuario = usuario.getCorreousuario();
-		passwordUsuario = usuario.getPasswordusuario();
+		nombreUsuario1 = usuario.getNombreusuario();
+		correoUsuario1 = usuario.getCorreousuario();
+		passwordUsuario1 = usuario.getPasswordusuario();
 		estadoUsuario = usuario.getEstadousuario();
 	}
 
 	public void EditarUsuario() {
 		try {
-			managerUsuarios.editarusuario(idUsuario, idTipoUsuario, nombreUsuario, correoUsuario, passwordUsuario,
+			managerUsuarios.editarusuario(idUsuario, idTipoUsuario, nombreUsuario1, correoUsuario1, passwordUsuario1,
 					estadoUsuario);
 			lista = managerUsuarios.findAllUsuarios();
 			JSFUtil.crearMensajeInfo("Usuario editado correctamente.");
@@ -136,10 +143,10 @@ public class ControllerUsuario {
 	
 	public List<SelectItem> getListaUsuariosSI() {
 		List<SelectItem> listadoSI = new ArrayList<SelectItem>();
-		List<TabLogUsuario> listadoUsuarios = managerUsuarios.findAllUsuarios();
+		List<TabLogTipoUsuario> listadoUsuarios = managerUsuarios.findAllTipoUsuarios();
 
-		for (TabLogUsuario c : listadoUsuarios) {
-			SelectItem item = new SelectItem(c.getIdusuario(), c.getTabLogTipoUsuario().getTipousuario());
+		for (TabLogTipoUsuario c : listadoUsuarios) {
+			SelectItem item = new SelectItem(c.getIdtipousuario(), c.getTipousuario());
 			listadoSI.add(item);
 		}
 		return listadoSI;
@@ -213,4 +220,29 @@ public class ControllerUsuario {
 		this.lista = lista;
 	}
 
+	public String getNombreUsuario1() {
+		return nombreUsuario1;
+	}
+
+	public void setNombreUsuario1(String nombreUsuario1) {
+		this.nombreUsuario1 = nombreUsuario1;
+	}
+
+	public String getCorreoUsuario1() {
+		return correoUsuario1;
+	}
+
+	public void setCorreoUsuario1(String correoUsuario1) {
+		this.correoUsuario1 = correoUsuario1;
+	}
+
+	public String getPasswordUsuario1() {
+		return passwordUsuario1;
+	}
+
+	public void setPasswordUsuario1(String passwordUsuario1) {
+		this.passwordUsuario1 = passwordUsuario1;
+	}
+
+	
 }

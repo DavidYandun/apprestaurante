@@ -36,8 +36,8 @@ public class ManagerPedido {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TabVtsPlato findPlatoById(int idplato) throws Exception {
-		TabVtsPlato p = em.find(TabVtsPlato.class, idplato);
+	public TabInvProducto findProductoById(int idproducto) throws Exception {
+		TabInvProducto p = em.find(TabInvProducto.class, idproducto);
 		return p;
 	}
 
@@ -98,7 +98,7 @@ public class ManagerPedido {
 	private void calcularPedidoTmp(TabVtsPedido pedidoTmp) {
 		double sumaTotales = 0;
 		for (TabVtsDetallePedido det : pedidoTmp.getTabVtsDetallePedidos()) {
-			sumaTotales += det.getCantidaddetallepedido().intValue() * det.getValorunitariodetallepedido().intValue();
+			sumaTotales += det.getCantidaddetallepedido().doubleValue() * det.getValorunitariodetallepedido().doubleValue();
 		}
 		pedidoTmp.setTotal(new BigDecimal(sumaTotales));
 	}
@@ -128,27 +128,27 @@ public class ManagerPedido {
 		}
 	}
 
-	public void agregarDetallePedidoTmp(TabVtsPedido pedidoTmp, Integer idplato, Integer cantidad) throws Exception {
-		TabVtsPlato p;
+	public void agregarDetallePedidoTmp(TabVtsPedido pedidoTmp, Integer idproducto, Integer cantidad) throws Exception {
+		TabInvProducto p;
 		TabVtsDetallePedido d;
 		double valorTotal;
 
 		if (pedidoTmp == null)
 			throw new Exception("Error primero debe crear un nuevo Pedido.");
-		if (idplato == null || idplato.intValue() < 0)
+		if (idproducto == null || idproducto.intValue() < 0)
 			throw new Exception("Error debe especificar el codigo del producto.");
 		if (cantidad == null || cantidad.intValue() <= 0)
 			throw new Exception("Error debe especificar la cantidad del producto.");
 
 		// buscamos el producto:
-		p = findPlatoById(idplato);
+		p = findProductoById(idproducto);
 		// creamos un nuevo detalle y llenamos sus propiedades:
 		d = new TabVtsDetallePedido();
-		valorTotal = cantidad * p.getValorplato().intValue();
+		valorTotal = cantidad * p.getValorventa().doubleValue();
 		d.setTabVtsPedido(pedidoTmp);
 		d.setCantidaddetallepedido(cantidad);
-		d.setValorunitariodetallepedido(p.getValorplato());
-		d.setTabVtsPlato(p);
+		d.setValorunitariodetallepedido(p.getValorventa());
+		d.setTabInvProducto(p);
 		d.setValorTotaldetallepedido(new BigDecimal(valorTotal));
 		pedidoTmp.getTabVtsDetallePedidos().add(d);
 		

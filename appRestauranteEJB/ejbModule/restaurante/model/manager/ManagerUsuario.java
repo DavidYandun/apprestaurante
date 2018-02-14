@@ -66,6 +66,15 @@ public class ManagerUsuario {
 		return listado;
 	}
 	
+	public List<TabLogTipoUsuario> findAllTipoUsuarios() {
+		Query q;
+		List<TabLogTipoUsuario> listado;
+		String sentenciaSQL;
+		sentenciaSQL = "SELECT c FROM TabLogTipoUsuario c ORDER BY c.idtipousuario";
+		q = em.createQuery(sentenciaSQL);
+		listado = q.getResultList();
+		return listado;
+	}
 	@SuppressWarnings("unchecked")
 	public TabLogUsuario findUsuario(String nombreUsuario, String correoUsuario) {
 		Query q = em.createQuery("select o from TabLogUsuario o where o.nombreusuario='" + nombreUsuario + "'"
